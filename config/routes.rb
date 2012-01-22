@@ -1,4 +1,11 @@
 BorysesTodo::Application.routes.draw do
+  resources :tasks
+
+  resources :tasklists
+
+  resources :users
+
+  match 'tasklists/:id/edit_list' => 'tasklists#edit_list'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
