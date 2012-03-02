@@ -1,0 +1,33 @@
+// Place all the styles related to the Projects controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+ul.projects_list {padding: 0px;}
+
+.projects_list li{
+  list-style: none;
+  float: left;
+  border-radius: 10px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+  margin: 5px;
+  padding: 5px;
+  width: 400px;
+  color: #000000;
+  font-family: "Helvetica Neue",Arial,Helvetica,sans-serif;
+  font-size: 16px;
+  background: none repeat scroll 0 0 #FFFFCC;
+  }
+
+.tasklists_list li{
+  list-style: none;
+  float: left;
+  border-radius: 5px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+  margin: 3px;
+  padding: 3px;
+  width: 380px;
+  color: #000000;
+  font-family: "Helvetica Neue",Arial,Helvetica,sans-serif;
+  font-size: 16px;
+  background: none repeat scroll 0 0 #FFFFCC;
+}

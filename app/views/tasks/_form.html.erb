@@ -1,0 +1,58 @@
+<%= form_for(@task) do |f| %>
+  <% if @task.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@task.errors.count, "error") %> prohibited this task from being saved:</h2>
+
+      <ul>
+      <% @task.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :tname, "Task Name" %><br />
+    <%= f.text_field :tname %>
+  </div>
+  <div class="field">
+    <%= f.label :tdescription, "Task Description" %><br />
+    <%= f.text_area :tdescription %>
+  </div> 
+  <div class="field">
+    <%= f.label :tpriority, "Task Priority" %><br />
+    <select id="task_tpriority" name="task[tpriority]">
+	<% Task::TASK_PRIORITIES.each do |p| %>
+        <option value='<%= p.to_s %>' <%= "selected='selected'" if @task.read_attribute(:tpriority) == p.to_s %>><%= p.to_s %></option>
+	<%- end %>
+    </select>
+  </div>
+    
+  <div class="field">
+    <%= f.label :tstate, "Task State" %><br />
+    <select id="task_tstate" name="task[tstate]">
+	<% Task::TASK_STATES.each do |p| %>
+        <option value='<%= p.to_s %>' <%= "selected='selected'" if @task.read_attribute(:tstate) == p.to_s %>><%= p.to_s %></option>
+	<%- end %>
+    </select>
+  </div>
+  <div>
+    
+  </div>
+  <div class="field">
+    <%= f.label :tasklist_id %><br />
+    <select id="task_tasklist_id" name="task[tasklist_id]">
+	<% Tasklist.all.each do |p| %>
+	<% @pid = p.read_attribute(:id).to_s %>
+        <option value='<%= @pid %>' <%= "selected='selected'" if @task.read_attribute(:tasklist_id).to_s == @pid %>><%= p.read_attribute(:tlname).to_s %></option>
+	<%- end %>
+    </select>
+  </div>
+  <div class="field">
+    <%= f.label :user_id %><br />
+    <%= f.number_field :user_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

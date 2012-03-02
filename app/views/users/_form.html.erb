@@ -1,0 +1,51 @@
+<%= form_for(@user) do |f| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+      <% @user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :fname, "First Name" %><br />
+    <%= f.text_field :fname %>
+  </div>
+  <div class="field">
+    <%= f.label :lname, "Last Name" %><br />
+    <%= f.text_field :lname %>
+  </div>
+  <div class="field">
+    <%= f.label :mname, "Middle Name" %><br />
+    <%= f.text_field :mname %>
+  </div>
+  <div class="field">
+    <%= f.label :email, "E-mail address" %><br />
+    <%= f.text_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label :gender, "Gender" %><br />
+    <select id="user_gender" name="user[gender]">
+	<% User::USER_GENDERS.each do |p| %>
+        <option value='<%= p.to_s %>' <%= "selected='selected'" if @user.read_attribute(:gender) == p.to_s %>><%= p.to_s %></option>
+	<%- end %>
+    </select>
+  </div>
+  <%if params[:action] == "new" %>
+  <div class="field">
+    <%= f.label :password, "Password" %><br />
+    <%= f.password_field :password %>
+  </div>
+  <div class="field">
+    <%= f.label :password_confirmation, "Confirmation" %><br />
+    <%= f.password_field :password_confirmation %>
+  </div>
+  <%end%>
+  <div class="actions">
+    <%= f.submit params[:action] == "edit" ? "Update":"Sign up" %>
+  </div>
+<% end %>

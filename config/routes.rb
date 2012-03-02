@@ -4,8 +4,10 @@ BorysesTodo::Application.routes.draw do
   resources :tasks
   resources :tasklists
   resources :users
+  resources :projects, :only => [:new, :create, :edit, :update, :destroy]
   resources :sessions, :only => [:new, :create, :destroy]
 
+  match '/', :to => 'sessions#new'
   match '/signup',  :to => 'users#new'
   match '/signin',  :to => 'sessions#new'
   match '/signout', :to => 'sessions#destroy'
@@ -13,6 +15,7 @@ BorysesTodo::Application.routes.draw do
 
   #match 'tasklists/:id/:state' => 'tasklists#list_tasks'
   get 'tasklists/:id/:state' => 'tasklists#list_tasks', :as => "list_tasks"
+  get 'users/:id/:project' => 'users#project', :as => "users_project"
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

@@ -1,0 +1,17 @@
+</br>
+<ul class = "projects_list">
+  <% @user.projects.each do |project| %>
+      <li>
+        <strong><%= project.name %></strong>
+        <p><%= project.description %></p>
+        <%= link_to 'Show tasklists', users_project_path(@user,project) %> |
+        <%= link_to 'Edit', edit_project_path(project) %> |
+        <%= link_to 'Destroy', project, confirm: 'Are you sure?', method: :delete %>
+      </li>
+  <% end %>
+
+</ul>
+
+
+
+
