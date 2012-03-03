@@ -2,7 +2,7 @@
 <div class = "projects_list">
   <li>
     <strong><%= @project.name %></strong>
-    <p><%= @project.description %></p>
+    <p><%= truncate @project.description, :length => 100 %></p>
   </li>
 </div>
 
@@ -12,8 +12,8 @@
       <li>
         <strong><%= tasklist.tlname %></strong>
         <p><%= truncate tasklist.tldescription, :length => 100 %></p>
-        <%= link_to 'Show lists of tasks', @project %> |
-        <%= link_to 'Edit', edit_tasklist_path(tasklist) %> |
+        <%= link_to 'Show list of tasks', users_tasklist_path(@user, tasklist) %> |
+        <%= link_to 'Edit', edit_tasklist_path(tasklist, :project_id => @project.id) %> |
         <%= link_to 'Destroy', tasklist, confirm: 'Are you sure?', method: :delete %>
       </li>
   <% end %>

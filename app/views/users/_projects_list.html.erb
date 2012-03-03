@@ -3,8 +3,8 @@
   <% @user.projects.each do |project| %>
       <li>
         <strong><%= project.name %></strong>
-        <p><%= project.description %></p>
-        <%= link_to 'Show tasklists', users_project_path(@user,project) %> |
+        <p><%= truncate project.description, :length => 100 %></p>
+        <%= link_to 'Show tasklists', users_project_path(@user,:project_id => project.id) %> |
         <%= link_to 'Edit', edit_project_path(project) %> |
         <%= link_to 'Destroy', project, confirm: 'Are you sure?', method: :delete %>
       </li>

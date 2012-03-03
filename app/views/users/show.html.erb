@@ -7,11 +7,11 @@
       </h1>
       </br>
 
-      <%= if !params[:task].nil?
-            render '_task'
-          elsif !params[:tasklist].nil?
-            render '_tasklist'
-          elsif !params[:project].nil?
+      <%= if !params[:task_id].nil?
+            render 'task'
+          elsif !params[:tasklist_id].nil?
+            render 'tasklist'
+          elsif !params[:project_id].nil?
             render 'project_view'
           else
             render 'projects_list'
@@ -30,14 +30,23 @@
       <strong>URL</strong>  <%= link_to user_path(@user), @user %><br />
       <!--strong>Microposts</strong--> <!--%= @user.microposts.count %-->
       <!--%= render 'shared/stats' %-->
-      <%= if !params[:tasklist].nil?
-            link_to 'Create new task', new_task_path
-          elsif !params[:project].nil?
+      <%= if !params[:tasklist_id].nil?
+            link_to 'Create new task', new_task_path(:tasklist_id => @tasklist.id)
+          elsif !params[:project_id].nil?
             link_to 'Create new tasklist', new_tasklist_path(:project_id => @project.id)
           else
             link_to 'Create new project', new_project_path
           end
       %>
+	  <% if !@user.projects.empty? %>
+	  </br>
+	  Your projects
+	  <ul>
+          <% @user.projects.each do |p| %>
+	   <li> <%= link_to p.name, users_project_path(@user,:project_id => p.id) %> </li>
+	  <% end %>
+	  </ul>
+	<% end %>
     </td>
   </tr>
 </table>

@@ -27,7 +27,22 @@ class UsersController < ApplicationController
 
   def project
     @user = User.find(params[:id])
-    @project = Project.find(params[:project])
+    @project = Project.find(params[:project_id])
+    if @user.projects.include?(@project)
+      respond_to do |format|
+        format.html { render action: "show" }
+        #format.json { render json: @user }
+      end
+    else
+      redirect_to @user
+    end
+  end
+
+  def tasklist
+    @user = User.find(params[:id])
+    @tasklist = Tasklist.find(params[:tasklist_id])
+    @project = Project.find(@tasklist.project_id)
+
     if @user.projects.include?(@project)
       respond_to do |format|
         format.html { render action: "show" }

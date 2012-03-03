@@ -36,6 +36,7 @@ class TasklistsController < ApplicationController
     end
   end
 
+
   # GET /tasklists/1/edit
   def edit
     @tasklist = Tasklist.find(params[:id])
@@ -48,7 +49,7 @@ class TasklistsController < ApplicationController
 
     respond_to do |format|
       if @tasklist.save
-        format.html { redirect_to @tasklist, notice: 'Tasklist was successfully created.' }
+        format.html { redirect_to users_project_path(current_user, @tasklist.project_id), notice: 'Tasklist was successfully created.' }
         format.json { render json: @tasklist, status: :created, location: @tasklist }
       else
         format.html { render action: "new" }
@@ -64,7 +65,7 @@ class TasklistsController < ApplicationController
 
     respond_to do |format|
       if @tasklist.update_attributes(params[:tasklist])
-        format.html { redirect_to @tasklist, notice: 'Tasklist was successfully updated.' }
+        format.html { redirect_to users_project_path(current_user, @tasklist.project_id), notice: 'Tasklist was successfully updated.' }
         format.json { head :ok }
       else
         format.html { render action: "edit" }

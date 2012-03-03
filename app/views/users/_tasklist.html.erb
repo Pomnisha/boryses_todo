@@ -1,0 +1,20 @@
+</br>
+<div class = "projects_list">
+  <li>
+    <strong><%= @tasklist.tlname %></strong>
+    <p><%= truncate @tasklist.tldescription, :length => 100 %></p>
+  </li>
+</div>
+
+</br>
+<ul class = "tasklists_list">
+  <% @tasklist.tasks.each do |task| %>
+      <li>
+        <strong><%= task.tname %></strong>
+        <p><%= truncate task.tdescription, :length => 100 %></p>
+        <%= link_to 'Edit', edit_task_path(task, :tasklist_id => @tasklist.id) %> |
+        <%= link_to 'Destroy', task, confirm: 'Are you sure?', method: :delete %>
+      </li>
+  <% end %>
+
+</ul>

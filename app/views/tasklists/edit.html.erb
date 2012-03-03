@@ -2,5 +2,4 @@
 
 <%= render 'form' %>
 
-<%= link_to 'Show', tasklist_path %> |
-<%= link_to 'Back', tasklists_path %>
+<%= link_to 'Back', users_project_path(current_user, params[:project_id]) %>

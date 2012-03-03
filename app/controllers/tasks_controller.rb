@@ -26,7 +26,9 @@ class TasksController < ApplicationController
   # GET /tasks/new.json
   def new
     @task = Task.new
-
+    if !params[:tasklist_id].nil?
+      @task.tasklist_id = params[:tasklist_id]
+    end
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @task }
@@ -45,7 +47,7 @@ class TasksController < ApplicationController
     
     respond_to do |format|
       if @task.save
-        format.html { redirect_to @task, notice: 'Task was successfully created.' }
+        format.html { redirect_to users_tasklist_path(current_user, @task.tasklist_id), notice: 'Task was successfully created.' }
         format.json { render json: @task, status: :created, location: @task }
       else
         format.html { render action: "new" }
@@ -61,7 +63,7 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.update_attributes(params[:task])
-        format.html { redirect_to @task, notice: 'Task was successfully updated.' }
+        format.html { redirect_to users_tasklist_path(current_user, @task.tasklist_id), notice: 'Task was successfully updated.' }
         format.json { head :ok }
       else
         format.html { render action: "edit" }

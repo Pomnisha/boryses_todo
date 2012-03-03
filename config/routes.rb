@@ -15,7 +15,8 @@ BorysesTodo::Application.routes.draw do
 
   #match 'tasklists/:id/:state' => 'tasklists#list_tasks'
   get 'tasklists/:id/:state' => 'tasklists#list_tasks', :as => "list_tasks"
-  get 'users/:id/:project' => 'users#project', :as => "users_project"
+  get 'users/:id/project/:project_id' => 'users#project', :as => "users_project"
+  get 'users/:id/tasklist/:tasklist_id' => 'users#tasklist', :as => "users_tasklist"
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
