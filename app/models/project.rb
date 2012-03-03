@@ -3,6 +3,6 @@ class Project < ActiveRecord::Base
   has_many :tasklists, :dependent => :destroy
   accepts_nested_attributes_for :tasklists
   validates :user_id, :name, :description, :presence => true
-
+  has_many :sharing_projects
 
 end

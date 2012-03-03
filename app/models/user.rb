@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   has_many :projects
+  has_many :sharing_projects
   accepts_nested_attributes_for :projects
   attr_accessor :password
   attr_accessible :fname, :lname, :mname, :gender, :email, :password, :password_confirmation
