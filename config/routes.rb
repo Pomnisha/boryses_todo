@@ -1,16 +1,18 @@
 BorysesTodo::Application.routes.draw do
-  get "sessions/new"
+
 
   resources :tasks
   resources :tasklists
   resources :users
-  resources :projects, :only => [:new, :create, :edit, :update, :destroy]
+  resources :projects, :only => [:new, :create, :edit, :update, :destroy]   do
+    resources :sharing_projects
+  end
   resources :sessions, :only => [:new, :create, :destroy]
 
   match '/', :to => 'sessions#new'
-  match '/signup',  :to => 'users#new'
   match '/signin',  :to => 'sessions#new'
   match '/signout', :to => 'sessions#destroy'
+  match '/signup', :to => 'user#new'
   root :to => 'sessions#new'
 
   #match 'tasklists/:id/:state' => 'tasklists#list_tasks'

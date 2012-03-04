@@ -1,18 +1,20 @@
 class User < ActiveRecord::Base
-  has_many :projects
+  #user owns many projects
+  has_many :projects, :class_name => 'Project', :foreign_key => 'user_id'
+  #user is invited to many projects
   has_many :sharing_projects
-  accepts_nested_attributes_for :projects
+  has_many :involved_into, :through => :sharing_projects, :source => :project
+
   attr_accessor :password
   attr_accessible :fname, :lname, :mname, :gender, :email, :password, :password_confirmation
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   USER_GENDERS = %w(male female)
+
   validates_inclusion_of :gender, :in => User::USER_GENDERS
 
-  validates :fname, :presence => true,
-		                :length => {:within => 1..64}
+  validates :fname, :length => {:within => 1..64}
 
-  validates :lname, :presence => true,
-		                :length => {:within => 1..64}
+  validates :lname, :length => {:within => 1..64}
   
   validates :email, :presence => true,
 		                :format => {:with => email_regex},
@@ -38,6 +40,14 @@ class User < ActiveRecord::Base
   def self.authenticate_with_salt(id, cookie_salt)
     user = find_by_id(id)
     (user && user.salt == cookie_salt) ? user : nil
+  end
+
+  def generate_pwd!
+    self.password = self.password_confirmation = SecureRandom.base64(6)
+  end
+
+  def username
+    "#{lname} #{fname}".blank?  ? email : "#{lname} #{fname}"
   end
 
   private

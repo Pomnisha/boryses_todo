@@ -3,6 +3,7 @@
   <li>
     <strong><%= @project.name %></strong>
     <p><%= truncate @project.description, :length => 100 %></p>
+    <%= link_to 'Share', new_project_sharing_project_path( @project ) %>
   </li>
 </div>
 
@@ -14,8 +15,8 @@
         <p><%= truncate tasklist.tldescription, :length => 100 %></p>
         <%= link_to 'Show list of tasks', users_tasklist_path(@user, tasklist) %> |
         <%= link_to 'Edit', edit_tasklist_path(tasklist, :project_id => @project.id) %> |
-        <%= link_to 'Destroy', tasklist, confirm: 'Are you sure?', method: :delete %>  |
-        <%= link_to 'Share', new_sharing_project_path(:project_id => @project.id) %>
+        <%= link_to 'Destroy', tasklist, confirm: 'Are you sure?', method: :delete %>
+
       </li>
   <% end %>
 

@@ -3,7 +3,7 @@
     <td class="main">
       <h1>
         <%= gravatar_for @user %>
-        <%= "#{@user.fname} #{@user.lname}" %>
+        <%= @user.username %>
       </h1>
       </br>
 
@@ -31,7 +31,7 @@
             link_to 'Create new project', new_project_path
           end
       %>
-	  <% if !@user.projects.empty? %>
+	  <% if !@user.involved_into.empty? %>
 	  </br>
 	  Your projects
 	  <ul>
