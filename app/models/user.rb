@@ -10,11 +10,11 @@ class User < ActiveRecord::Base
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   USER_GENDERS = %w(male female)
 
-  validates_inclusion_of :gender, :in => User::USER_GENDERS
+  validates_inclusion_of :gender, :in => User::USER_GENDERS, :allow_nil => true
 
-  validates :fname, :length => {:within => 1..64}
+  validates :fname, :length => {:within => 0..64}
 
-  validates :lname, :length => {:within => 1..64}
+  validates :lname, :length => {:within => 0..64}
   
   validates :email, :presence => true,
 		                :format => {:with => email_regex},
