@@ -1,19 +1,14 @@
 BorysesTodo::Application.routes.draw do
 
-
+  devise_for :users, :path_names => { :sign_in => 'signin', :sign_out => 'signout', :sign_up => 'signup' }
   resources :tasks
   resources :tasklists
   resources :users
   resources :projects, :only => [:new, :create, :edit, :update, :destroy]   do
     resources :sharing_projects
   end
-  resources :sessions, :only => [:new, :create, :destroy]
 
-  match '/', :to => 'sessions#new'
-  match '/signin',  :to => 'sessions#new'
-  match '/signout', :to => 'sessions#destroy'
-  match '/signup', :to => 'users#new'
-  root :to => 'sessions#new'
+  root :to => 'users#show'
 
   #match 'tasklists/:id/:state' => 'tasklists#list_tasks'
   get 'tasklists/:id/:state' => 'tasklists#list_tasks', :as => "list_tasks"

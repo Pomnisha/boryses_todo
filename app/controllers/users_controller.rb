@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
-  before_filter :authenticate, :only => [:index, :edit, :update, :destroy, :project]
+  before_filter :authenticate_user!
   before_filter :sign_out_before_do_this, :only => :new
-  before_filter :correct_user, :only => [:show, :edit, :update]
+  #before_filter :correct_user, :only => [:show, :edit, :update]
   before_filter :admin_user,   :only => :destroy
   # GET /users
   # GET /users.json
@@ -17,7 +17,7 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    @user = User.find(params[:id])
+    @user = User.find(current_user)
     @title = "Users profile"
     respond_to do |format|
       format.html # show.html.erb
@@ -66,7 +66,7 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
-    #@user = User.find(params[:id])
+    @user = User.find(params[:id])
   end
 
   # POST /users
@@ -119,15 +119,12 @@ class UsersController < ApplicationController
   private
 
   def sign_out_before_do_this
-    deny_access if signed_in?
+    deny_access if user_signed_in?
   end
 
-  def correct_user
-    @user = User.find(params[:id])
-    redirect_to(root_path) unless current_user?(@user)
-  end
-
+=begin
   def admin_user
     redirect_to(root_path) unless current_user.admin?
   end
+=end
 end

@@ -1,5 +1,5 @@
 class TasklistsController < ApplicationController
-  before_filter :authenticate, :only => [:index, :edit, :update, :destroy, :new]
+  before_filter :authenticate_user!
 
   # GET /tasklists
   # GET /tasklists.json

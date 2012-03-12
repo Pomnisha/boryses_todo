@@ -1,21 +1,24 @@
 class User < ActiveRecord::Base
+  # Include default devise modules. Others available are:
+  # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable, :encryptable
+
+  # Setup accessible (or protected) attributes for your model
+  attr_accessible :fname, :lname, :mname, :gender, :email, :password, :password_confirmation, :remember_me
   #user owns many projects
   has_many :projects, :class_name => 'Project', :foreign_key => 'user_id'
   #user is invited to many projects
   has_many :sharing_projects
   has_many :involved_into, :through => :sharing_projects, :source => :project
   has_many :tasks_todo, :class_name => 'Task', :foreign_key => 'user_id'
-  attr_accessor :password
-  attr_accessible :fname, :lname, :mname, :gender, :email, :password, :password_confirmation
+
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   USER_GENDERS = %w(male female)
 
   validates_inclusion_of :gender, :in => User::USER_GENDERS, :allow_nil => true
 
-  validates :fname, :length => {:within => 0..64}
 
-  validates :lname, :length => {:within => 0..64}
-  
   validates :email, :presence => true,
 		                :format => {:with => email_regex},
 		                :uniqueness => {:case_sensitive => false}
@@ -25,6 +28,8 @@ class User < ActiveRecord::Base
 		                    :length => {:within => 6..40},
                         :on => :create
 
+
+=begin
   before_save :encrypt_password
 
   def has_password?(submitted_password)
@@ -41,15 +46,15 @@ class User < ActiveRecord::Base
     user = find_by_id(id)
     (user && user.salt == cookie_salt) ? user : nil
   end
-
+=end
   def generate_pwd!
     self.password = self.password_confirmation = SecureRandom.base64(6)
   end
 
   def username
-    "#{lname} #{fname}".blank?  ? email : "#{lname} #{fname}"
+    "#{lname} #{mname} #{fname}".blank?  ? email : "#{lname} #{mname}. #{fname}"
   end
-
+=begin
   private
 
     def encrypt_password
@@ -68,5 +73,5 @@ class User < ActiveRecord::Base
     def secure_hash(string)
       Digest::SHA2.hexdigest(string)
     end
-
+=end
 end

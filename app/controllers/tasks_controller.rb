@@ -1,5 +1,7 @@
 class TasksController < ApplicationController
+  before_filter :authenticate_user!
   before_filter :get_tasklist_and_project, :only => [:new, :edit]
+
   # GET /tasks
   # GET /tasks.json
   def index

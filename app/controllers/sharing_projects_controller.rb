@@ -1,4 +1,5 @@
 class SharingProjectsController < ApplicationController
+  before_filter :authenticate_user!
   before_filter :get_project
 
   # GET /sharing_projects

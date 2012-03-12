@@ -16,16 +16,16 @@ class SessionsController < ApplicationController
     user = User.authenticate(params[:session][:email],
                              params[:session][:password])
     respond_to do |format|
-        if user.nil?
-          flash.now[:error] = "Invalid email/password combination."
-          format.html { render action: "new" }
-          format.json { render json: user.errors, status: :unprocessable_entity }
-        else
-            sign_in user
-            format.html { redirect_back_or user }
-            format.json { render json: user , status: :created, location: user}
-        end
+      if user.nil?
+        flash.now[:error] = "Invalid email/password combination."
+        format.html { render action: "new" }
+        format.json { render json: user.errors, status: :unprocessable_entity }
+      else
+        sign_in user
+        format.html { redirect_back_or user }
+        format.json { render json: user , status: :created, location: user}
       end
+    end
   end
 
   def destroy

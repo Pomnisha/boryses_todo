@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
-  before_filter :authenticate, :only => [:index, :edit, :update, :destroy]
-  # GET /projects
+  before_filter :authenticate_user!
+    # GET /projects
   # GET /projects.json
 #  def index
 #    @projects = Project.all
