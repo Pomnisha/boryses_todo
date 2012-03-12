@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   #user is invited to many projects
   has_many :sharing_projects
   has_many :involved_into, :through => :sharing_projects, :source => :project
-
+  has_many :tasks_todo, :class_name => 'Task', :foreign_key => 'user_id'
   attr_accessor :password
   attr_accessible :fname, :lname, :mname, :gender, :email, :password, :password_confirmation
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i

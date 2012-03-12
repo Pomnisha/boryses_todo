@@ -1,5 +1,5 @@
 class TasksController < ApplicationController
-
+  before_filter :get_tasklist_and_project, :only => [:new, :edit]
   # GET /tasks
   # GET /tasks.json
   def index
@@ -26,13 +26,12 @@ class TasksController < ApplicationController
   # GET /tasks/new.json
   def new
     @task = Task.new
-    if !params[:tasklist_id].nil?
-      @task.tasklist_id = params[:tasklist_id]
-    end
+
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @task }
     end
+
   end
 
   # GET /tasks/1/edit
@@ -44,7 +43,7 @@ class TasksController < ApplicationController
   # POST /tasks.json
   def create
     @task = Task.new(params[:task])
-    
+
     respond_to do |format|
       if @task.save
         format.html { redirect_to users_tasklist_path(current_user, @task.tasklist_id), notice: 'Task was successfully created.' }
@@ -82,5 +81,10 @@ class TasksController < ApplicationController
       format.html { redirect_to tasks_url }
       format.json { head :ok }
     end
+  end
+
+  def get_tasklist_and_project
+    @tasklist = Tasklist.find(params[:tasklist_id])
+    @project = Project.find(@tasklist.project_id)
   end
 end

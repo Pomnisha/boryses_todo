@@ -35,7 +35,7 @@
 	<%- end %>
     </select>
   </div>
-  <%if params[:action] == "new" %>
+  <%if  %w(new create).include?(params[:action]) %>
   <div class="field">
     <%= f.label :password, "Password" %><br />
     <%= f.password_field :password %>

@@ -12,7 +12,7 @@ BorysesTodo::Application.routes.draw do
   match '/', :to => 'sessions#new'
   match '/signin',  :to => 'sessions#new'
   match '/signout', :to => 'sessions#destroy'
-  match '/signup', :to => 'user#new'
+  match '/signup', :to => 'users#new'
   root :to => 'sessions#new'
 
   #match 'tasklists/:id/:state' => 'tasklists#list_tasks'

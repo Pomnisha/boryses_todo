@@ -1,0 +1,5 @@
+<h1>Share "<%= @project.name %>" project with</h1>
+
+<%= render 'form' %>
+
+<%= link_to 'Share', users_project_path(current_user,:project_id => @project.id) %>
