@@ -19,12 +19,15 @@ require 'spec_helper'
 # that an instance is receiving a specific message.
 
 describe ProjectsController do
-
+  @user = FactoryGirl.create(:user)
   # This should return the minimal set of attributes required to create a valid
   # Project. As you add validations to Project, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    {}
+    {:name => "Project #1",
+     :description => "Description of project #1",
+     :owner => @user.id
+    }
   end
   
   # This should return the minimal set of values that should be in the session
