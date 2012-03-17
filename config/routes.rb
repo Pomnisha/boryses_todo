@@ -5,9 +5,10 @@ BorysesTodo::Application.routes.draw do
   resources :tasklists
   resources :users
   resources :projects, :only => [:new, :create, :edit, :update, :destroy]   do
-  resources :sharing_projects
+    resources :sharing_projects
   end
 
+  get 'pages/description' => 'pages#description'
   root :to => 'users#show'
 
   #match 'tasklists/:id/:state' => 'tasklists#list_tasks'

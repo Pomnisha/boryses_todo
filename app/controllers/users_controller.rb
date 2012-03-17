@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!
   before_filter :sign_out_before_do_this, :only => :new
-  #before_filter :correct_user, :only => [:show, :edit, :update]
-  before_filter :admin_user,   :only => :destroy
+  before_filter :correct_user, :only => [:show, :edit, :update]
+  #before_filter :admin_user,   :only => :destroy
   # GET /users
   # GET /users.json
   def index
@@ -122,9 +122,9 @@ class UsersController < ApplicationController
     deny_access if user_signed_in?
   end
 
-=begin
-  def admin_user
-    redirect_to(root_path) unless current_user.admin?
+
+  def correct_user
+    redirect_to(root_path) unless current_user == @user
   end
-=end
+
 end
