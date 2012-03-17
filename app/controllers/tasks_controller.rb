@@ -80,7 +80,7 @@ class TasksController < ApplicationController
     @task.destroy
 
     respond_to do |format|
-      format.html { redirect_to tasks_url }
+      format.html { redirect_to users_tasklist_path(current_user, @task.tasklist_id) }
       format.json { head :ok }
     end
   end

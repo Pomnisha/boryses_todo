@@ -4,8 +4,8 @@ FactoryGirl.define do
   end
 
   factory :user do
-    fname "Rashba"
-    lname "Boris"
+    lname "Rashba"
+    fname "Boris"
     email {Factory.next(:email)}
     password "password1"
     password_confirmation "password1"

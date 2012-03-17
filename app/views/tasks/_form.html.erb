@@ -56,7 +56,7 @@
       <%= f.label :user_id %><br />
       <select id="task_user_id" name="task[user_id]">
             <option value=""></option>
-            <option value='<%= @project.user_id %>' <%= "selected='selected'" if @task.read_attribute(:user_id) == @project_user_id %>><%= User.find(@project.user_id).username.to_s %></option>
+            <option value='<%= @project.owner_id %>' <%= "selected='selected'" if @task.read_attribute(:user_id) == @project_owner_id %>><%= User.find(@project.owner_id).username.to_s %></option>
             <% @project.users.each do |p| %>
                 <option value='<%= p.id.to_s %>' <%= "selected='selected'" if @task.read_attribute(:user_id) == p.id %>><%= User.find(p).username.to_s %></option>
             <%- end %>

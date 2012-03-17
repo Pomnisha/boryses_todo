@@ -2,30 +2,10 @@ class ProjectsController < ApplicationController
   before_filter :authenticate_user!
     # GET /projects
   # GET /projects.json
-#  def index
-#    @projects = Project.all
-#
-#    respond_to do |format|
-#      format.html # index.html.erb
-#      format.json { render json: @projects }
-#    end
-#  end
-
-  # GET /projects/1
-  # GET /projects/1.json
-#  def show
-#    @project = Project.find(params[:id])
-#
-#    respond_to do |format|
-#      format.html # show.html.erb
-#      format.json { render json: @project }
-#    end
-#  end
 
   # GET /projects/new
   # GET /projects/new.json
   def new
-
     @project = Project.new
 
     respond_to do |format|
@@ -43,7 +23,7 @@ class ProjectsController < ApplicationController
   # POST /projects.json
   def create
     @project = Project.new(params[:project])
-    @project.user = current_user
+    @project.owner = current_user
     respond_to do |format|
       if @project.save
         format.html { redirect_to current_user, notice: 'Project was successfully created.' }
