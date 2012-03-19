@@ -1,0 +1,18 @@
+%header
+  #logo
+    #logo_text
+      %h1
+        %a{:href => "index.html"}
+          ToDoList
+      %h2
+        = current_user.username unless current_user.nil?
+  %nav
+    #menu_container
+      %ul.sf-menu#nav
+        %li= link_to "Home", root_path
+        -if signed_in?
+          %li= link_to "Profile", edit_user_path(current_user)
+          %li= link_to "Settings", edit_user_registration_path(current_user)
+          %li= link_to "Sign out", destroy_user_session_path, :method => :delete
+        -else
+          %li= link_to "Sign in", new_user_session_path

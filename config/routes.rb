@@ -8,8 +8,8 @@ BorysesTodo::Application.routes.draw do
     resources :sharing_projects
   end
 
-  get 'pages/description' => 'pages#description'
-  root :to => 'users#show'
+  get 'pages/about' => 'pages#about'
+  root :to => 'pages#about'
 
   #match 'tasklists/:id/:state' => 'tasklists#list_tasks'
   get 'tasklists/:id/:state' => 'tasklists#list_tasks', :as => "list_tasks"
