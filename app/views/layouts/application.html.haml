@@ -12,46 +12,24 @@
         - flash.each do |key, value|
           .flash{:class => "flash #{key}"}= value
       #site_content
-        #sidebar_container
-          .sidebar
-            %h3 Latest News
-            %h4 New Website Launched
-            %h5 March 1st, 2012
-            %p
-              2012 sees the redesign of our website. Let us know what you think.....
-              %a{:href => "#"} read more
-          .sidebar
-            %h3 Special Offers
-            %h4 20% Discount
-            %p For the month of March 2012, we are offering a 20% discount for all new customers.
-          .sidebar
-            %h3 Contact Us
-            %p We'd love to hear from you. Call us,
-            %a{:href => "#"} email us
-            or complete our
-            %a{:href => "contact.php"} contact form
+        = if !current_user.nil?
+          #sidebar_container
+            .sidebar
+              %h3
+                Your projects
+                %ul
+                  - current_user.projects.each do |p|
+                    %li
+                      %a{:href => "#{project_path(p.id)}"}= p.name
+            .sidebar
+              %h3
+                You are involved into
+                %ul
+                  - current_user.involved_into.each do |p|
+                    %li
+                      %a{:href => "#{project_path(p.id)}"}= p.name
         #content
-          %h1 Welcome to the CSS3_four template
-          %p
-            This simple, fixed width website template is released under a
-            %a{:href => "http://creativecommons.org/licenses/by/3.0"} Creative Commons Attribution 3.0 Licence
-            This means you are free to download and use it for personal and commercial projects. However, you
-            %strong must leave the 'design from css3templates.co.uk' link in the footer of the template.
-          %p
-            This template is written entirely in
-            %strong HTML5
-            and
-            %strong CSS3.
-            You can view more free CSS3 web templates
-            %a{:href => "http://www.css3templates.co.uk"} here.
-          %h2 Browser Compatibility
-          %p This template has been tested in the following browsers:
-          %ul
-            %li Internet Explorer 8
-            %li Internet Explorer 7
-            %li FireFox 10
-            %li Google Chrome 17
-            %li Safari 4
+          = yield
       %div#scroll
         %a.top{:title => "Scroll to the top", :href => "#"}
           %img{:src => "#{asset_path('top.png')}", :alt => "top"}

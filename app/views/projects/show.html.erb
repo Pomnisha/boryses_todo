@@ -1,25 +1,23 @@
-<p id="notice"><%= notice %></p>
+</br>
+<div class = "projects_list">
+  <li>
+    <strong><%= @project.name %></strong>
+    <p><%= truncate @project.description, :length => 100 %></p>
+    <%= link_to 'Share', new_project_sharing_project_path( @project ) %>
+  </li>
+</div>
 
-<p>
-  <b>Name:</b>
-  <%= @project.name %>
-</p>
+</br>
+<ul class = "tasklists_list">
+  <% @project.tasklists.each do |tasklist| %>
+      <li>
+        <strong><%= tasklist.tlname %></strong>
+        <p><%= truncate tasklist.tldescription, :length => 100 %></p>
+        <%= link_to 'Show list of tasks', tasklist_path(tasklist) %> |
+        <%= link_to 'Edit', edit_tasklist_path(tasklist, :project_id => @project.id) %> |
+        <%= link_to 'Destroy', tasklist, confirm: 'Are you sure?', method: :delete %>
 
-<p>
-  <b>Description:</b>
-  <%= @project.description %>
-</p>
+      </li>
+  <% end %>
 
-<p>
-  <b>Tasklist:</b>
-  <%= @project.tasklist_id %>
-</p>
-
-<p>
-  <b>User:</b>
-  <%= @project.user_id %>
-</p>
-
-
-<%= link_to 'Edit', edit_project_path(@project) %> |
-<%= link_to 'Back', projects_path %>
+</ul>

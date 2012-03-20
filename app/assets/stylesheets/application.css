@@ -231,6 +231,8 @@ nav {
 .sidebar li a, .sidebar li a:hover {
     padding: 0 0 0 25px;
     display: block;
+    line-height: 1em;
+    font-size: 0.8em;
 }
 
 .sidebar li a.selected {

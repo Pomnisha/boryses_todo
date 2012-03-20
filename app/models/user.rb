@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
   has_many :involved_into, :through => :sharing_projects, :source => :project
   has_many :tasks_todo, :class_name => 'Task', :foreign_key => 'user_id'
 
+
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   USER_GENDERS = %w(male female)
 

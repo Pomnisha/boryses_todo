@@ -1,23 +1,20 @@
-<p id="notice"><%= notice %></p>
+</br>
+<div class = "projects_list">
+  <li>
+    <strong><%= @tasklist.tlname %></strong>
+    <p><%= truncate @tasklist.tldescription, :length => 100 %></p>
+  </li>
+</div>
 
-<p>
-  <b>Task List Name:</b>
-  <%= @tasklist.tlname %>
-</p>
+</br>
+<ul class = "tasklists_list">
+  <% @tasklist.tasks.each do |task| %>
+      <li>
+        <strong><%= task.tname %></strong>
+        <p><%= truncate task.tdescription, :length => 100 %></p>
+        <%= link_to 'Edit', edit_task_path(task, :tasklist_id => @tasklist.id) %> |
+        <%= link_to 'Destroy', task, confirm: 'Are you sure?', method: :delete %>
+      </li>
+  <% end %>
 
-<p>
-  <b>Task List Description:</b>
-  <%= @tasklist.tldescription %>
-</p>
-
-<p>
-  <b>User:</b>
-  <%= @tasklist.user_id %>
-</p>
-
-
-<%= link_to 'Edit', edit_tasklist_path(@tasklist) %> |
-<%= link_to 'See completed tasks', list_tasks_path(@tasklist.id, "done") %> |
-<%= link_to 'See not completed tasks', list_tasks_path(@tasklist.id, "open") %> |
-<%= link_to 'See all tasks', list_tasks_path(@tasklist.id, "all") %> |
-<%= link_to 'Back', tasklists_path %>
+</ul>
