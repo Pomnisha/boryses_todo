@@ -1,5 +1,6 @@
 class TasklistsController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :correct_user
 
   # GET /tasklists
   # GET /tasklists.json
@@ -102,5 +103,14 @@ class TasklistsController < ApplicationController
       format.html # list_tasks.html.erb
     end
   end
-  
+
+  private
+# need to understand if controller can work without @project
+  def correct_user
+
+    @tasklist = Tasklist.find(params[:id]) ? if !params[:id].nil?
+    !params[:id].nil? ? @project = Tasklist.find(params[@tasklist.project]) : @project = Tasklist.find(params[:project_id])
+    redirect_to(root_path) unless project.collaborators.include?(current_user)
+  end
 end
+

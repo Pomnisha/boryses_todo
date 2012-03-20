@@ -1,10 +1,11 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!
   before_filter :sign_out_before_do_this, :only => :new
-  #before_filter :correct_user, :only => [:show, :edit, :update]
+  before_filter :correct_user
   #before_filter :admin_user,   :only => :destroy
   # GET /users
   # GET /users.json
+=begin
   def index
     @users = User.all
 
@@ -12,29 +13,26 @@ class UsersController < ApplicationController
       format.html # index.html.erb
       format.json { render json: @users }
     end
-  end
+=end
 
   # GET /users/1
   # GET /users/1.json
   def show
-    @user = User.find(current_user)
+    @user = User.find(params[:id])
     @title = "Users profile"
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @user }
     end
   end
 
   def project
-    @user = User.find(params[:id])
     @project = Project.find(params[:project_id])
-    if @user.projects.include?(@project)
+    if current_user.projects.include?(@project)
       respond_to do |format|
         format.html { render action: "show" }
-        #format.json { render json: @user }
       end
     else
-      redirect_to @user
+      redirect_to current_user
     end
   end
 
@@ -46,10 +44,9 @@ class UsersController < ApplicationController
     if @user.projects.include?(@project)
       respond_to do |format|
         format.html { render action: "show" }
-        #format.json { render json: @user }
       end
     else
-      redirect_to @user
+      redirect_to current_user
     end
   end
   
@@ -60,7 +57,6 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @user }
     end
   end
 
@@ -79,10 +75,8 @@ class UsersController < ApplicationController
         UserMailer.welcome_email(@user).deliver
         sign_in @user
         format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render json: @user, status: :created, location: @user }
       else
         format.html { render action: "new" }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -95,10 +89,8 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.update_attributes(params[:user])
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
-        format.json { head :ok }
       else
         format.html { render action: "edit" }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -111,7 +103,6 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to users_url }
-      format.json { head :ok }
     end
   end
 
@@ -124,7 +115,7 @@ class UsersController < ApplicationController
 
 
   def correct_user
-    redirect_to(root_path) unless current_user == @user
+    redirect_to(root_path) unless current_user.id == params[:id]
   end
 
 end

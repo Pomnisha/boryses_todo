@@ -4,7 +4,7 @@ BorysesTodo::Application.routes.draw do
   resources :tasks
   resources :tasklists
   resources :users
-  resources :projects, :only => [:new, :create, :edit, :update, :destroy]   do
+  resources :projects, :only => [:new, :create, :edit, :update, :destroy, :show]   do
     resources :sharing_projects
   end
 
