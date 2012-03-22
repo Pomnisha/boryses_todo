@@ -35,12 +35,16 @@ class User < ActiveRecord::Base
   end
 
   def username
-    "#{lname} #{mname} #{fname}".blank?  ? email : "#{lname} #{mname}. #{fname}"
+    "#{lname} #{mname} #{fname}".blank?  ? email : "#{lname} #{ mname[0] << "." if !mname.blank?} #{fname}"
   end
 
   def projects
     sharing_projects.map(&:project) | Project.where(:owner_id => id)
   end
 
+  def tasks_todo_in_project(project)
+    self.tasks_todo.where(project)
+  end
+  
 
 end

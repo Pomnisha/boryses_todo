@@ -1,0 +1,10 @@
+#projects_list
+  - current_user.projects.each do |project|
+    .proj
+      %strong= project.name
+      %p= truncate project.description, :length => 100
+      = link_to 'Show tasklists', tasklists_path(:project_id => project.id)
+      |
+      = link_to 'Edit', edit_project_path(project)
+      |
+      = link_to 'Destroy', project, confirm: 'Are you sure?', method: :delete

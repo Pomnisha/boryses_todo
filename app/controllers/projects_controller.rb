@@ -1,22 +1,25 @@
 class ProjectsController < ApplicationController
   before_filter :authenticate_user!
-    # GET /projects
+  before_filter :correct_user, :only => [:edit, :update, :destroy, :show]
+  # GET /projects
   # GET /projects.json
 
   # GET /projects/new
   # GET /projects/new.json
 
-  def show
-    @project = Project.find(params[:id])
+  def index
   end
 
+  def show
+    @user = current_user
+    @project = Project.find(params[:id])
+  end
 
   def new
     @project = Project.new
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @project }
     end
   end
 
@@ -33,10 +36,8 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if @project.save
         format.html { redirect_to current_user, notice: 'Project was successfully created.' }
-        format.json { render json: current_user, status: :created, location: @project }
       else
         format.html { render action: "new" }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -49,10 +50,8 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if @project.update_attributes(params[:project])
         format.html { redirect_to current_user, notice: 'Project was successfully updated.' }
-        format.json { head :ok }
       else
         format.html { render action: "edit" }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -65,7 +64,18 @@ class ProjectsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to current_user, notice: 'Project was successfully deleted.' }
-      format.json { head :ok }
+    end
+  end
+
+  private
+
+  def correct_user
+    begin
+      @project = Project.find(params[:id])
+    rescue
+      redirect_to user_path(current_user), notice: "Wrong project identifier."
+    ensure
+      redirect_to user_path(current_user), notice: 'You are not allowed to access this content.' unless @project.nil? or @project.collaborators.include?(current_user)
     end
   end
 end

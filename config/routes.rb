@@ -1,10 +1,18 @@
 BorysesTodo::Application.routes.draw do
 
-  devise_for :users, :path_names => { :sign_in => 'signin', :sign_out => 'signout', :sign_up => 'signup' }
+  devise_for :users, :path_prefix => 'dev', :path_names => { :sign_in => 'signin', :sign_out => 'signout', :sign_up => 'signup' }
+  #resources :users
+  devise_for :users do
+    get 'logout' => 'devise/sessions#destroy'
+  end
+  namespace :users do
+    root :to => "#show"
+  end
+
   resources :tasks
   resources :tasklists
   resources :users
-  resources :projects, :only => [:new, :create, :edit, :update, :destroy, :show]   do
+  resources :projects do
     resources :sharing_projects
   end
 
@@ -13,8 +21,8 @@ BorysesTodo::Application.routes.draw do
 
   #match 'tasklists/:id/:state' => 'tasklists#list_tasks'
   get 'tasklists/:id/:state' => 'tasklists#list_tasks', :as => "list_tasks"
-  get 'users/:id/project/:project_id' => 'users#project', :as => "users_project"
-  get 'users/:id/tasklist/:tasklist_id' => 'users#tasklist', :as => "users_tasklist"
+  #get 'users/:id/project/:project_id' => 'users#project', :as => "users_project"
+  #get 'users/:id/tasklist/:tasklist_id' => 'users#tasklist', :as => "users_tasklist"
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

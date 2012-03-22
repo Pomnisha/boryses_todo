@@ -1,0 +1,9 @@
+%h1
+  Tasks to do
+- if @user.tasks_todo.empty? then
+  %p You are happy person. You don't have any tasks assigned for you to perform.
+- else
+  %ul
+  - @user.tasks_todo.each do |t|
+    %li
+      %p= t.tname

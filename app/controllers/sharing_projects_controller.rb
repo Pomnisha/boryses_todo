@@ -8,7 +8,7 @@ class SharingProjectsController < ApplicationController
     @sharing_projects = SharingProject.all
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html # index.html.haml
       format.json { render json: @sharing_projects }
     end
   end

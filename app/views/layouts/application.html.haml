@@ -12,29 +12,47 @@
         - flash.each do |key, value|
           .flash{:class => "flash #{key}"}= value
       #site_content
-        = if !current_user.nil?
+        - if !current_user.nil? then
           #sidebar_container
             .sidebar
               %h3
-                Your projects
+                Activity
+              %ul
+                %li
+                  %a{:href => "#{new_project_path}"}= "Create new project"
+                - if !@project.nil? and !@project.new_record?
+                  %li
+                    %a{:href => "#{new_tasklist_path(params[:tasklist] => {[:project_id] => @project.id})}"}= "Create new list of tasks"
+                  %li
+                    - if @tasklist.nil? then
+                      %a{:href => "#{new_task_path(params[:task] => {[:project_id] => @project.id})}"}= "Create new task"
+                    - else
+                      %a{:href => "#{new_task_path(params[:task] => {[:tasklist_id] => @tasklist.id})}"}= "Create new task"
+            - if !current_user.projects.empty? then
+              .sidebar
+                %h3
+                  Your projects
                 %ul
                   - current_user.projects.each do |p|
                     %li
-                      %a{:href => "#{project_path(p.id)}"}= p.name
-            .sidebar
-              %h3
-                You are involved into
+                      %a{:href => project_path(p.id)}= p.name
+            - if !current_user.involved_into.empty? then
+              .sidebar
+                %h3
+                  You are involved into
                 %ul
                   - current_user.involved_into.each do |p|
                     %li
-                      %a{:href => "#{project_path(p.id)}"}= p.name
+                      %a{:href => project_path(p.id)}= p.name
         #content
           = yield
       %div#scroll
         %a.top{:title => "Scroll to the top", :href => "#"}
           %img{:src => "#{asset_path('top.png')}", :alt => "top"}
       %footer
-
+        %p Developed by Borys Rashba, 2012.
+      - if Rails.env.development?
+        #debug= debug(params)
 //    %script{:type => "text/javascript", :src => "js/jquery.js"}
 //    %script{:type => "text/javascript", :src => "js/jquery.easing-sooper.js"}
 //    %script{:type => "text/javascript", :src => "js/jquery.sooperfish.js"}

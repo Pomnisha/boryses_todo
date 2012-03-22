@@ -8,8 +8,7 @@ class TasksController < ApplicationController
     @tasks = Task.all
 
     respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @tasks }
+      format.html # index.html.haml
     end
   end
 
@@ -19,8 +18,7 @@ class TasksController < ApplicationController
     @task = Task.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @task }
+      format.html # show.html.haml
     end
   end
 
@@ -31,7 +29,6 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @task }
     end
 
   end
@@ -48,11 +45,9 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.save
-        format.html { redirect_to users_tasklist_path(current_user, @task.tasklist_id), notice: 'Task was successfully created.' }
-        format.json { render json: @task, status: :created, location: @task }
+        format.html { redirect_to @task, notice: 'Task was successfully created.' }
       else
         format.html { render action: "new" }
-        format.json { render json: @task.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -64,11 +59,9 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.update_attributes(params[:task])
-        format.html { redirect_to users_tasklist_path(current_user, @task.tasklist_id), notice: 'Task was successfully updated.' }
-        format.json { head :ok }
+        format.html { redirect_to @task, notice: 'Task was successfully updated.' }
       else
         format.html { render action: "edit" }
-        format.json { render json: @task.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -81,12 +74,11 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to users_tasklist_path(current_user, @task.tasklist_id) }
-      format.json { head :ok }
     end
   end
 
   def get_tasklist_and_project
     @tasklist = Tasklist.find(params[:tasklist_id])
-    @project = Project.find(@tasklist.project_id)
+    @project = Project.find(@tasklist.project)
   end
 end

@@ -1,46 +1,47 @@
 class TasklistsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :correct_user
+  before_filter :correct_user, :only => [:new, :show, :edit, :update, :destroy]
+  before_filter :need_tasklist, :only => [:new]
 
   # GET /tasklists
   # GET /tasklists.json
+
+# Don't know whether the action is necessary'
+# List of tasklists is present in projects view.
+=begin
   def index
+
     @tasklists = Tasklist.all
 
     respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @tasklists }
+      format.html # index.html.haml
     end
-  end
+=end
 
   # GET /tasklists/1
   # GET /tasklists/1.json
   def show
-    @tasklist = Tasklist.find(params[:id])
+#    @tasklist = Tasklist.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @tasklist }
+      format.html # show.html.haml
     end
   end
 
   # GET /tasklists/new
   # GET /tasklists/new.json
   def new
-    @tasklist = Tasklist.new
-    if !params[:project_id].nil?
-      @tasklist.project_id = params[:project_id]
-    end
+#    @tasklist = Tasklist.new(params[:tasklist])
+#    @project = Project.find(params[:project_id]) and @tasklist.project = @project if !params[:project_id].nil?
     respond_to do |format|
       format.html { render action: "new"}
-      format.json { render json: @tasklist }
     end
   end
 
 
   # GET /tasklists/1/edit
   def edit
-    @tasklist = Tasklist.find(params[:id])
+#    @tasklist = Tasklist.find(params[:id])
   end
 
   # POST /tasklists
@@ -50,11 +51,9 @@ class TasklistsController < ApplicationController
 
     respond_to do |format|
       if @tasklist.save
-        format.html { redirect_to users_project_path(current_user, @tasklist.project_id), notice: 'Tasklist was successfully created.' }
-        format.json { render json: @tasklist, status: :created, location: @tasklist }
+        format.html { redirect_to @tasklist, notice: 'Tasklist was successfully created.' }
       else
         format.html { render action: "new" }
-        format.json { render json: @tasklist.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -62,15 +61,13 @@ class TasklistsController < ApplicationController
   # PUT /tasklists/1
   # PUT /tasklists/1.json
   def update
-    @tasklist = Tasklist.find(params[:id])
+#    @tasklist = Tasklist.find(params[:id])
 
     respond_to do |format|
       if @tasklist.update_attributes(params[:tasklist])
-        format.html { redirect_to users_project_path(current_user, @tasklist.project_id), notice: 'Tasklist was successfully updated.' }
-        format.json { head :ok }
+        format.html { redirect_to @tasklist, notice: 'Tasklist was successfully updated.' }
       else
         format.html { render action: "edit" }
-        format.json { render json: @tasklist.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -78,17 +75,16 @@ class TasklistsController < ApplicationController
   # DELETE /tasklists/1
   # DELETE /tasklists/1.json
   def destroy
-    @tasklist = Tasklist.find(params[:id])
+#    @tasklist = Tasklist.find(params[:id])
     @tasklist.destroy
 
     respond_to do |format|
       format.html { redirect_to tasklists_url }
-      format.json { head :ok }
     end
   end
   
   def list_tasks
-    @tasklist = Tasklist.find(params[:id])
+#    @tasklist = Tasklist.find(params[:id])
     @needed_states = Task::TASK_STATES
     case params[:state]
     when "done"
@@ -105,12 +101,29 @@ class TasklistsController < ApplicationController
   end
 
   private
-# need to understand if controller can work without @project
-  def correct_user
 
-    @tasklist = Tasklist.find(params[:id]) ? if !params[:id].nil?
-    !params[:id].nil? ? @project = Tasklist.find(params[@tasklist.project]) : @project = Tasklist.find(params[:project_id])
-    redirect_to(root_path) unless project.collaborators.include?(current_user)
+  def correct_user
+    if params[:id].nil? then
+      @tasklist = Tasklist.new(params[:tasklist])
+    else
+      @tasklist = Tasklist.find(params[:id])
+    end
+
+      if !@tasklist.nil? then
+        @project = @tasklist.project
+        redirect_to root_path, notice: 'You are not allowed to access this content.' unless @project.collaborators.include?(current_user)
+      else
+        redirect_to root_path, notice: 'Wrong list of tasks identifier.'
+      end
+
   end
+
+  def need_tasklist
+    @project = Project.find(params[:project_id])
+    if @project.tasklists.empty? then
+      redirect_to new_tasklist_path(params[:taklist] => {[:project_id] => @project.id}), :notice => 'There are no lists of tasks in current project. Please create one firstly.'
+    end
+  end
+
 end
 

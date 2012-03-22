@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!
   before_filter :sign_out_before_do_this, :only => :new
-  before_filter :correct_user
+  before_filter :correct_user, :only => [ :edit, :update, :destroy, :show]
   #before_filter :admin_user,   :only => :destroy
   # GET /users
   # GET /users.json
@@ -10,46 +10,22 @@ class UsersController < ApplicationController
     @users = User.all
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html # index.html.haml
       format.json { render json: @users }
     end
 =end
 
   # GET /users/1
   # GET /users/1.json
+
   def show
     @user = User.find(params[:id])
     @title = "Users profile"
     respond_to do |format|
-      format.html # show.html.erb
+      format.html # show.html.haml
     end
   end
 
-  def project
-    @project = Project.find(params[:project_id])
-    if current_user.projects.include?(@project)
-      respond_to do |format|
-        format.html { render action: "show" }
-      end
-    else
-      redirect_to current_user
-    end
-  end
-
-  def tasklist
-    @user = User.find(params[:id])
-    @tasklist = Tasklist.find(params[:tasklist_id])
-    @project = Project.find(@tasklist.project_id)
-
-    if @user.projects.include?(@project)
-      respond_to do |format|
-        format.html { render action: "show" }
-      end
-    else
-      redirect_to current_user
-    end
-  end
-  
   # GET /users/new
   # GET /users/new.json
   def new
@@ -74,7 +50,7 @@ class UsersController < ApplicationController
       if @user.save
         UserMailer.welcome_email(@user).deliver
         sign_in @user
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
+        format.html { redirect_to projects_path, notice: 'User was successfully created.' }
       else
         format.html { render action: "new" }
       end
@@ -88,7 +64,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.update_attributes(params[:user])
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
+        format.html { redirect_to projects_path, notice: 'User was successfully updated.' }
       else
         format.html { render action: "edit" }
       end
@@ -97,12 +73,14 @@ class UsersController < ApplicationController
 
   # DELETE /users/1
   # DELETE /users/1.json
+
+# Don't know how to organize jet.'
   def destroy
     @user = User.find(params[:id])
     @user.destroy
 
     respond_to do |format|
-      format.html { redirect_to users_url }
+      format.html { redirect_to root_path }
     end
   end
 
@@ -113,9 +91,9 @@ class UsersController < ApplicationController
     deny_access if user_signed_in?
   end
 
-
+# to ask is it correct
   def correct_user
-    redirect_to(root_path) unless current_user.id == params[:id]
+    redirect_to root_path, :notice => "You are not allowed to access this content."  unless current_user.id.to_s == params[:id].to_s
   end
 
 end
