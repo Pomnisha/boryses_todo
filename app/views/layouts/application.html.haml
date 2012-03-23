@@ -22,12 +22,10 @@
                   %a{:href => "#{new_project_path}"}= "Create new project"
                 - if !@project.nil? and !@project.new_record?
                   %li
-                    %a{:href => "#{new_tasklist_path(params[:tasklist] => {[:project_id] => @project.id})}"}= "Create new list of tasks"
+                    %a{:href => "#{new_project_tasklist_path(@project)}"}= "Create new list of tasks"
                   %li
-                    - if @tasklist.nil? then
-                      %a{:href => "#{new_task_path(params[:task] => {[:project_id] => @project.id})}"}= "Create new task"
-                    - else
-                      %a{:href => "#{new_task_path(params[:task] => {[:tasklist_id] => @tasklist.id})}"}= "Create new task"
+                    - if !@tasklist.nil? then
+                      %a{:href => "#{new_project_tasklist_task_path(@project, @tasklist)}"}= "Create new task"
             - if !current_user.projects.empty? then
               .sidebar
                 %h3

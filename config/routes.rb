@@ -9,11 +9,12 @@ BorysesTodo::Application.routes.draw do
     root :to => "#show"
   end
 
-  resources :tasks
-  resources :tasklists
   resources :users
   resources :projects do
     resources :sharing_projects
+    resources :tasklists do
+      resources :tasks
+    end
   end
 
   get 'pages/about' => 'pages#about'

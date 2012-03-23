@@ -109,12 +109,16 @@ class TasklistsController < ApplicationController
       @tasklist = Tasklist.find(params[:id])
     end
 
-      if !@tasklist.nil? then
-        @project = @tasklist.project
-        redirect_to root_path, notice: 'You are not allowed to access this content.' unless @project.collaborators.include?(current_user)
+    if @tasklist.nil? then
+      redirect_to root_path, notice: 'Wrong list of tasks identifier.'
+    else
+      if !@tasklist.new_record? then
+        @project = Project.find(@tasklist.id)
+        redirect_to user_path(current_user), notice: 'You are not allowed to access this content.' unless @project.collaborators.include?(current_user)
       else
-        redirect_to root_path, notice: 'Wrong list of tasks identifier.'
+        return
       end
+    end
 
   end
 

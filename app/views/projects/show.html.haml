@@ -2,7 +2,7 @@
   .proj
     %strong= @project.name
     %p= truncate @project.description, :length => 100
-    = link_to 'Show tasklists', tasklists_path(:project_id => @project.id)
+    = link_to 'Show tasklists', project_tasklist_path(@project)
     |
     = link_to 'Edit', edit_project_path(@project)
     |
@@ -13,6 +13,6 @@
   %p You are happy person. You don't have any tasks assigned for you to perform in current project.
 - else
   %ul
-  - @user.tasks_todo_in_project(@project).each do |t|
+  - @user.tasks_todo.each do |t|
     %li
-      %p= t.tname
+      %p= t.tname if @project.tasks.include?(t)

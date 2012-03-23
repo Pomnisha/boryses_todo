@@ -42,9 +42,4 @@ class User < ActiveRecord::Base
     sharing_projects.map(&:project) | Project.where(:owner_id => id)
   end
 
-  def tasks_todo_in_project(project)
-    self.tasks_todo.where(project)
-  end
-  
-
 end
