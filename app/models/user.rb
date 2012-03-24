@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :fname, :lname, :mname, :gender, :email, :password, :password_confirmation, :remember_me
   #user owns many projects
-  #has_many :projects, :class_name => 'Project', :foreign_key => 'user_id'
+  has_many :projects, :class_name => 'Project', :foreign_key => 'owner_id'
   #user is invited to many projects
   has_many :sharing_projects
   has_many :involved_into, :through => :sharing_projects, :source => :project
@@ -35,11 +35,16 @@ class User < ActiveRecord::Base
   end
 
   def username
-    "#{lname} #{mname} #{fname}".blank?  ? email : "#{lname} #{ mname[0] << "." if !mname.blank?} #{fname}"
+    "#{fname} #{mname} #{lname}".blank?  ? email : "#{fname} #{ mname[0] << "." if !mname.blank?} #{lname}"
   end
 
   def projects
-    sharing_projects.map(&:project) | Project.where(:owner_id => id)
+    Project.where(:owner_id => id)
+  end
+
+  def tasks_todo_in(project)
+    p = Project.find(project)
+    p.tasks.where(:user_id => self.id) if p.collaborators.include?(self)
   end
 
 end

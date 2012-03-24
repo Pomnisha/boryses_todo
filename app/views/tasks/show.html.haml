@@ -1,0 +1,10 @@
+%h1= @task.tname
+%p= truncate @task.tdescription, :length => 100
+%br
+- if @task.user.nil? then
+  %h6= "The task is not assigned for anybody to perform"
+-else
+  %h6= "The task is assigned for #{@task.user.username} to perform"
+= link_to 'Edit', edit_project_tasklist_task_path(@project, @tasklist, @task)
+|
+= link_to 'List of tasks', project_tasklist_tasks_path(@project, @tasklist)

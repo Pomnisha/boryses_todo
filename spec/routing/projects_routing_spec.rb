@@ -1,10 +1,11 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe ProjectsController do
+
   describe "routing" do
 
     it "routes to #index" do
-      get("/projects").should route_to("projects#index")
+      get("/projects").should route_to("project#index")
     end
 
     it "routes to #new" do
@@ -32,4 +33,5 @@ describe ProjectsController do
     end
 
   end
+
 end

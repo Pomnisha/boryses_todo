@@ -1,18 +1,44 @@
 #projects_list
   .proj
-    %strong= @project.name
-    %p= truncate @project.description, :length => 100
-    = link_to 'Show tasklists', project_tasklist_path(@project)
+    %h1= @project.name
+    %h6
+      = "Complited by #{@project.stat} %. "
+      - if @project.stat != 100.0
+        = "( #{@project.opened} tasks opened, #{@project.in_process} tasks in prosess, #{@project.done} tasks completed)"
+    %p= @project.description
+    = link_to 'Show tasklists', project_tasklists_path(@project)
     |
     = link_to 'Edit', edit_project_path(@project)
     |
     = link_to 'Destroy', @project, confirm: 'Are you sure?', method: :delete
+    |
+    = link_to 'Share', new_project_sharing_project_path(@project)
 %h1
-  Tasks to do
-- if @user.tasks_todo.empty? then
+  Tasks
+- if @user.tasks_todo_in(@project).empty? then
   %p You are happy person. You don't have any tasks assigned for you to perform in current project.
 - else
-  %ul
-  - @user.tasks_todo.each do |t|
-    %li
-      %p= t.tname if @project.tasks.include?(t)
+  - if @user.tasks_todo_in(@project).where("tstate = ?", 'open').count != 0 then
+    %h2 Opened tasks
+    %ul
+    - @user.tasks_todo_in(@project).where("tstate = ?", 'open').each do |t|
+      %li
+        - tl = Tasklist.find(t.tasklist_id)
+        - p = Project.find(tl.project_id)
+        = link_to t.tname, edit_project_tasklist_task_path(p, tl, t)
+  - if @user.tasks_todo_in(@project).where("tstate = ?", 'processing').count != 0 then
+    %h2 Tasks in process
+    %ul
+    - @user.tasks_todo_in(@project).where("tstate = ?", 'processing').each do |t|
+      %li
+        - tl = Tasklist.find(t.tasklist_id)
+        - p = Project.find(tl.project_id)
+        = link_to t.tname, edit_project_tasklist_task_path(p, tl, t)
+  - if @user.tasks_todo_in(@project).where("tstate = ?", 'done').count != 0 then
+    %h2 Completed tasks
+    %ul
+    - @user.tasks_todo_in(@project).where("tstate = ?", 'done').each do |t|
+      %li
+        - tl = Tasklist.find(t.tasklist_id)
+        - p = Project.find(tl.project_id)
+        = link_to t.tname, edit_project_tasklist_task_path(p, tl, t)

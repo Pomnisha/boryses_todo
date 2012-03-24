@@ -1,36 +1,18 @@
 class TasksController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :get_tasklist_and_project, :only => [:new, :edit]
-
-  # GET /tasks
-  # GET /tasks.json
-  def index
-    @tasks = Task.all
-
-    respond_to do |format|
-      format.html # index.html.haml
-    end
-  end
+  before_filter :correct_user
 
   # GET /tasks/1
   # GET /tasks/1.json
   def show
     @task = Task.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.haml
-    end
   end
 
   # GET /tasks/new
   # GET /tasks/new.json
   def new
     @task = Task.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-    end
-
+    render action: "new"
   end
 
   # GET /tasks/1/edit
@@ -42,13 +24,10 @@ class TasksController < ApplicationController
   # POST /tasks.json
   def create
     @task = Task.new(params[:task])
-
-    respond_to do |format|
-      if @task.save
-        format.html { redirect_to @task, notice: 'Task was successfully created.' }
-      else
-        format.html { render action: "new" }
-      end
+    if @task.save
+      redirect_to project_tasklist_task_path(@project, @tasklist, @task), notice: 'Task was successfully created.'
+    else
+      render action: "new"
     end
   end
 
@@ -56,13 +35,10 @@ class TasksController < ApplicationController
   # PUT /tasks/1.json
   def update
     @task = Task.find(params[:id])
-
-    respond_to do |format|
-      if @task.update_attributes(params[:task])
-        format.html { redirect_to @task, notice: 'Task was successfully updated.' }
-      else
-        format.html { render action: "edit" }
-      end
+    if @task.update_attributes(params[:task])
+      redirect_to project_tasklist_task_path(@project, @tasklist, @task), notice: 'Task was successfully updated.'
+    else
+      render action: "edit"
     end
   end
 
@@ -72,13 +48,18 @@ class TasksController < ApplicationController
     @task = Task.find(params[:id])
     @task.destroy
 
-    respond_to do |format|
-      format.html { redirect_to users_tasklist_path(current_user, @task.tasklist_id) }
-    end
+    redirect_to project_tasklist_path(@project, @tasklist)
   end
 
-  def get_tasklist_and_project
-    @tasklist = Tasklist.find(params[:tasklist_id])
-    @project = Project.find(@tasklist.project)
+  def correct_user
+    begin
+      @project = Project.find(params[:project_id])
+      @tasklist = Tasklist.find(params[:tasklist_id])
+    rescue
+      redirect_to user_path(current_user), notice: "Wrong identifier."
+    ensure
+      redirect_to user_path(current_user), notice: 'You are not allowed to access this content.' unless @project.nil? or @project.collaborators.include?(current_user)
+    end
+
   end
 end

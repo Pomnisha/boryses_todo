@@ -18,11 +18,11 @@ describe TasklistsController do
         :project_id => @project.id
     }
   end
-  
+
   describe "GET index" do
     it "assigns all tasklists as @tasklists" do
       tasklist = Tasklist.create! valid_attributes
-      get :index, {}
+      get :index, {:project_id => @project.id}
       assigns(:tasklists).should eq([tasklist])
     end
   end
@@ -30,14 +30,14 @@ describe TasklistsController do
   describe "GET show" do
     it "assigns the requested tasklist as @tasklist" do
       tasklist = Tasklist.create! valid_attributes
-      get :show, {:id => tasklist.to_param}
+      get :show, { :project_id => @project.id, :id => tasklist.to_param}
       assigns(:tasklist).should eq(tasklist)
     end
   end
 
   describe "GET new" do
     it "assigns a new tasklist as @tasklist" do
-      get :new, {}
+      get :new, {:project_id => @project.id}
       assigns(:tasklist).should be_a_new(Tasklist)
     end
   end
@@ -45,7 +45,7 @@ describe TasklistsController do
   describe "GET edit" do
     it "assigns the requested tasklist as @tasklist" do
       tasklist = Tasklist.create! valid_attributes
-      get :edit, {:id => tasklist.to_param}
+      get :edit, {:project_id => @project.id, :id => tasklist.to_param}
       assigns(:tasklist).should eq(tasklist)
     end
   end
@@ -54,19 +54,19 @@ describe TasklistsController do
     describe "with valid params" do
       it "creates a new Tasklist" do
         expect {
-          post :create, {:tasklist => valid_attributes}
+          post :create, {:project_id => @project.id, :tasklist => valid_attributes}
         }.to change(Tasklist, :count).by(1)
       end
 
       it "assigns a newly created tasklist as @tasklist" do
-        post :create, {:tasklist => valid_attributes}
+        post :create, {:project_id => @project.id, :tasklist => valid_attributes}
         assigns(:tasklist).should be_a(Tasklist)
         assigns(:tasklist).should be_persisted
       end
 
       it "redirects to the created tasklist" do
-        post :create, {:tasklist => valid_attributes}
-        response.should redirect_to(users_project_path(@user, @project))
+        post :create, {:project_id => @project.id, :tasklist => valid_attributes}
+        response.should redirect_to(project_tasklist_path(@project))
       end
     end
 
@@ -74,14 +74,14 @@ describe TasklistsController do
       it "assigns a newly created but unsaved tasklist as @tasklist" do
         # Trigger the behavior that occurs when invalid params are submitted
         Tasklist.any_instance.stub(:save).and_return(false)
-        post :create, {:tasklist => {}}
+        post :create, {:project_id => @project.id, :tasklist => {}}
         assigns(:tasklist).should be_a_new(Tasklist)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         Tasklist.any_instance.stub(:save).and_return(false)
-        post :create, {:tasklist => {}}
+        post :create, {:project_id => @project.id, :tasklist => {}}
         response.should render_template("new")
       end
     end
@@ -96,19 +96,19 @@ describe TasklistsController do
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
         Tasklist.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
-        put :update, {:id => tasklist.to_param, :tasklist => {'these' => 'params'}}
+        put :update, {:project_id => @project.id, :id => tasklist.to_param, :tasklist => {'these' => 'params'}}
       end
 
       it "assigns the requested tasklist as @tasklist" do
         tasklist = Tasklist.create! valid_attributes
-        put :update, {:id => tasklist.to_param, :tasklist => valid_attributes}
+        put :update, {:project_id => @project.id, :id => tasklist.to_param, :tasklist => valid_attributes}
         assigns(:tasklist).should eq(tasklist)
       end
 
       it "redirects to the tasklist" do
         tasklist = Tasklist.create! valid_attributes
-        put :update, {:id => tasklist.to_param, :tasklist => valid_attributes}
-        response.should redirect_to(users_project_path(@user, @project))
+        put :update, {:project_id => @project.id, :id => tasklist.to_param, :tasklist => valid_attributes}
+        response.should redirect_to(project_tasklist_path(@project,tasklist))
       end
     end
 
@@ -117,7 +117,7 @@ describe TasklistsController do
         tasklist = Tasklist.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Tasklist.any_instance.stub(:save).and_return(false)
-        put :update, {:id => tasklist.to_param, :tasklist => {}}
+        put :update, {:project_id => @project.id, :id => tasklist.to_param, :tasklist => {}}
         assigns(:tasklist).should eq(tasklist)
       end
 
@@ -125,7 +125,7 @@ describe TasklistsController do
         tasklist = Tasklist.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Tasklist.any_instance.stub(:save).and_return(false)
-        put :update, {:id => tasklist.to_param, :tasklist => {}}
+        put :update, {:project_id => @project.id, :id => tasklist.to_param, :tasklist => {}}
         response.should render_template("edit")
       end
     end
@@ -135,14 +135,14 @@ describe TasklistsController do
     it "destroys the requested tasklist" do
       tasklist = Tasklist.create! valid_attributes
       expect {
-        delete :destroy, {:id => tasklist.to_param}
+        delete :destroy, {:project_id => @project.id, :id => tasklist.to_param}
       }.to change(Tasklist, :count).by(-1)
     end
 
     it "redirects to the tasklists list" do
       tasklist = Tasklist.create! valid_attributes
-      delete :destroy, {:id => tasklist.to_param}
-      response.should redirect_to(tasklists_url)
+      delete :destroy, {:project_id => @project.id, :id => tasklist.to_param}
+      response.should redirect_to(project_tasklists_url)
     end
   end
 

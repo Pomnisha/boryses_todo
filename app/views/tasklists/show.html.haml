@@ -1,0 +1,14 @@
+%br
+%ul.projects_list
+  %li
+    %strong= @tasklist.tlname
+    %p= truncate @tasklist.tldescription, :length => 100
+%br
+%ul.tasklists_list
+  - @tasklist.tasks.each do |task|
+    %li
+      %strong= task.tname
+      %p= truncate task.tdescription, :length => 100
+      = link_to 'Edit', edit_project_tsklist_task_path(task, :tasklist_id => @tasklist.id)
+      |
+      = link_to 'Destroy', task, confirm: 'Are you sure?', method: :delete

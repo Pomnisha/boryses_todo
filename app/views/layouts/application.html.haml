@@ -23,9 +23,9 @@
                 - if !@project.nil? and !@project.new_record?
                   %li
                     %a{:href => "#{new_project_tasklist_path(@project)}"}= "Create new list of tasks"
+                - if !@tasklist.nil? and !@tasklist.new_record? then
                   %li
-                    - if !@tasklist.nil? then
-                      %a{:href => "#{new_project_tasklist_task_path(@project, @tasklist)}"}= "Create new task"
+                    %a{:href => "#{new_project_tasklist_task_path(@project, @tasklist)}"}= "Create new task"
             - if !current_user.projects.empty? then
               .sidebar
                 %h3

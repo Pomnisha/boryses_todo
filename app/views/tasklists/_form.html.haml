@@ -1,0 +1,27 @@
+= form_for([@project, @tasklist]) do |f|
+  - if @tasklist.errors.any?
+    #error_explanation
+      %h2
+        = "#{pluralize(@tasklist.errors.count, "error")} prohibited this tasklist from being saved:"
+      %ul
+        - @tasklist.errors.full_messages.each do |msg|
+          %li= msg
+  .field
+    = f.label :tlname, "Task List Name"
+    %br
+    = f.text_field :tlname
+  .field
+    = f.label :tldescription, "Task List Description"
+    %br
+    = f.text_area :tldescription
+  .field
+    = f.label :project_id, "Project"
+    %br
+    %select{:class => "tasklist_project_id", :name => "tasklist[project_id]"}
+      - current_user.projects.each do |p|
+        - if @project.id.to_s == p.id.to_s then
+          %option{:value => p.id, :selected => 'selected' }= p.name
+        - else
+          %option{:value => p.id}= p.name
+  .actions
+    = f.submit

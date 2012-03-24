@@ -6,10 +6,9 @@ class ProjectsController < ApplicationController
 
   # GET /projects/new
   # GET /projects/new.json
-
   def index
+    redirect_to user_path(current_user)
   end
-
   def show
     @user = current_user
     @project = Project.find(params[:id])
@@ -17,10 +16,7 @@ class ProjectsController < ApplicationController
 
   def new
     @project = Project.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-    end
+    render action: "new"
   end
 
   # GET /projects/1/edit
@@ -33,13 +29,13 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(params[:project])
     @project.owner = current_user
-    respond_to do |format|
-      if @project.save
-        format.html { redirect_to current_user, notice: 'Project was successfully created.' }
-      else
-        format.html { render action: "new" }
-      end
+
+    if @project.save
+      redirect_to @project, notice: 'Project was successfully created.'
+    else
+      render action: "new"
     end
+
   end
 
   # PUT /projects/1
@@ -47,12 +43,10 @@ class ProjectsController < ApplicationController
   def update
     @project = Project.find(params[:id])
 
-    respond_to do |format|
-      if @project.update_attributes(params[:project])
-        format.html { redirect_to current_user, notice: 'Project was successfully updated.' }
-      else
-        format.html { render action: "edit" }
-      end
+    if @project.update_attributes(params[:project])
+      redirect_to @project, notice: 'Project was successfully updated.'
+    else
+      render action: "edit"
     end
   end
 
@@ -61,10 +55,7 @@ class ProjectsController < ApplicationController
   def destroy
     @project = Project.find(params[:id])
     @project.destroy
-
-    respond_to do |format|
-      format.html { redirect_to current_user, notice: 'Project was successfully deleted.' }
-    end
+    redirect_to user_path(current_user), notice: 'Project was successfully deleted.'
   end
 
   private

@@ -3,7 +3,7 @@
     .proj
       %strong= project.name
       %p= truncate project.description, :length => 100
-      = link_to 'Show tasklists', tasklists_path(:project_id => project.id)
+      = link_to 'Show tasklists', project_tasklists_path()
       |
       = link_to 'Edit', edit_project_path(project)
       |

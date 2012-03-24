@@ -3,10 +3,8 @@ require 'spec_helper'
 describe ProjectsController do
 
   @user
-
   before(:each) do
     @request.env["devise.mapping"] = Devise.mappings[:user]
-    #@user = User.create!(:fname => "Boris", :lname => "Rashba", :mname => "A", :password => "password", :email => "factory1@email.com")
     @user = FactoryGirl.create(:user, :mname => "A")
 
     sign_in @user
@@ -57,7 +55,7 @@ describe ProjectsController do
 
       it "redirects to the  user main view" do
         post :create, {:project => valid_attributes}
-        response.should redirect_to(@user)
+        response.should redirect_to(@project)
       end
     end
   end
@@ -97,10 +95,10 @@ describe ProjectsController do
         assigns(:project).should eq(project)
       end
 
-      it "redirects to the  user main view" do
+      it "redirects to the project's main view" do
         project = Project.create! valid_attributes
         put :update, {:id => project.to_param, :project => valid_attributes}
-        response.should redirect_to(@user)
+        response.should redirect_to(@project)
       end
     end
 
