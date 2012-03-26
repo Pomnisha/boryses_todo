@@ -1,11 +1,11 @@
-%h1 List of task
+%h1 List of tasks
 %ul#tasks_list
-  - @tasklist.tasks.each do |task|
+  - @tasks.each do |task|
     %li
       = link_to task.tname, edit_project_tasklist_task_path(@project, @tasklist, task)
       %p= truncate task.tdescription, :length => 100
       - if task.user.nil? then
-        %p= "The task is not assigned for anybody to perform"
+        %h6= "The task is not assigned for anybody to perform"
       -else
         %h6= "The task is assigned for #{task.user.username} to perform"
 

@@ -8,7 +8,7 @@ describe Project do
   describe 'required fields' do
     it {should validate_presence_of(:name)}
     it {should validate_presence_of(:description)}
-    it {should validate_presence_of(:user_id)}
+    it {should validate_presence_of(:owner_id)}
   end
 
   describe 'associations' do
@@ -24,9 +24,18 @@ describe Project do
 
   end
 
-  describe 'additional fields' do
+  describe 'additional fields:' do
     it 'should have collaborators' do
-      pending 'waiting for Factory Girl'
+      pending 'waiting for THE ANSWER'
+    end
+
+    Task::TASK_STATES.each do |s|
+      it "should have fields '#{s}' to list tasks in #{s} state " do
+        pending 'waiting for THE ANSWER'
+      end
+    end
+    it "should have fields 'stat' to show completeness of the project " do
+      pending 'waiting for THE ANSWER'
     end
 
   end

@@ -57,26 +57,12 @@ class TasklistsController < ApplicationController
     redirect_to project_tasklists_path
   end
   
-  def list_tasks
-    @tasklist = Tasklist.find(params[:id])
-    @needed_states = Task::TASK_STATES
-    case params[:state]
-    when "done"
-    	    @needed_states = %w(done)
-    when "open"
-    	    @needed_states = %w(open processing)
-    end
-    
-    @tasks = Task.find(:all, :conditions => { :tstate => @needed_states, :tasklist_id => params[:id]})
-    
-    render action: "list_tasks"
-  end
-
   private
 
   def correct_user
     begin
       @project = Project.find(params[:project_id])
+      @user = current_user
     rescue
       redirect_to user_path(current_user), notice: "Wrong project identifier."
     ensure

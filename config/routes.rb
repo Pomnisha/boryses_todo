@@ -1,6 +1,6 @@
 BorysesTodo::Application.routes.draw do
 
-  devise_for :users, :path_prefix => 'dev', :path_names => { :sign_in => 'signin', :sign_out => 'signout', :sign_up => 'signup' } do
+  devise_for :users, :path_prefix => 'dev', :path_names => { :sign_in => 'signin', :sign_up => 'signup' } do
     get 'logout' => 'devise/sessions#destroy'
   end
   namespace :users do
@@ -15,13 +15,10 @@ BorysesTodo::Application.routes.draw do
     end
   end
 
+  get 'project/:project_id/tasklist/:tasklist_id/tasks/:state' => 'tasks#index', :as => "project_tasklist_tasks_by_state"
   get 'pages/about' => 'pages#about'
   root :to => 'pages#about'
 
-  #match 'tasklists/:id/:state' => 'tasklists#list_tasks'
-  get 'tasklists/:id/:state' => 'tasklists#list_tasks', :as => "list_tasks"
-  #get 'users/:id/project/:project_id' => 'users#project', :as => "users_project"
-  #get 'users/:id/tasklist/:tasklist_id' => 'users#tasklist', :as => "users_tasklist"
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

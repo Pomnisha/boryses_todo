@@ -4,6 +4,16 @@ class TasksController < ApplicationController
 
   # GET /tasks/1
   # GET /tasks/1.json
+  def index
+    if Task::TASK_STATES.include?(params[:state]) then
+      @tasks = @tasklist.tasks.where(:tstate => params[:state])
+    else
+      @tasks = @tasklist.tasks
+      render action: "index", :notice => "Wrong state. All tasks are listed."
+    end
+  end
+
+
   def show
     @task = Task.find(params[:id])
   end

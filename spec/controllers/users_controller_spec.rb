@@ -3,12 +3,15 @@ require 'spec_helper'
 describe UsersController do
 
   def valid_attributes
-    {}
+    {
+        :email => "mail@mail.ru", :password => "1password1"
+    }
   end
   
   describe "GET index" do
     it "assigns all users as @users" do
       user = User.create! valid_attributes
+      sign_in user
       get :index, {}
       assigns(:users).should eq([user])
     end
@@ -17,6 +20,7 @@ describe UsersController do
   describe "GET show" do
     it "assigns the requested user as @user" do
       user = User.create! valid_attributes
+      sign_in user
       get :show, {:id => user.to_param}
       assigns(:user).should eq(user)
     end
@@ -32,6 +36,7 @@ describe UsersController do
   describe "GET edit" do
     it "assigns the requested user as @user" do
       user = User.create! valid_attributes
+      sign_in user
       get :edit, {:id => user.to_param}
       assigns(:user).should eq(user)
     end
@@ -47,12 +52,14 @@ describe UsersController do
 
       it "assigns a newly created user as @user" do
         post :create, {:user => valid_attributes}
+        sign_in user
         assigns(:user).should be_a(User)
         assigns(:user).should be_persisted
       end
 
       it "redirects to the created user" do
         post :create, {:user => valid_attributes}
+        sign_in user
         response.should redirect_to(User.last)
       end
     end

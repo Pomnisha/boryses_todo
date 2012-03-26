@@ -38,13 +38,10 @@ class User < ActiveRecord::Base
     "#{fname} #{mname} #{lname}".blank?  ? email : "#{fname} #{ mname[0] << "." if !mname.blank?} #{lname}"
   end
 
-  def projects
-    Project.where(:owner_id => id)
-  end
-
-  def tasks_todo_in(project)
-    p = Project.find(project)
-    p.tasks.where(:user_id => self.id) if p.collaborators.include?(self)
+  def tasks_todo_in(entity)
+    e = Project.find(entity) if entity.kind_of? Project
+    e = Tasklist.find(entity) if entity.kind_of? Tasklist
+    e.tasks.where(:user_id => self.id)
   end
 
 end

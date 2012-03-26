@@ -1,14 +1,38 @@
-%br
 %ul.projects_list
   %li
     %strong= @tasklist.tlname
     %p= truncate @tasklist.tldescription, :length => 100
-%br
+    - Task::TASK_STATES.each do |s|
+      = link_to s.to_s, project_tasklist_tasks_by_state_path(@project, @tasklist, s)
+      |
 %ul.tasklists_list
   - @tasklist.tasks.each do |task|
     %li
       %strong= task.tname
-      %p= truncate task.tdescription, :length => 100
-      = link_to 'Edit', edit_project_tsklist_task_path(task, :tasklist_id => @tasklist.id)
+      %p= task.tdescription
+      = link_to 'Edit', edit_project_tasklist_task_path(@project, @tasklist, task)
       |
-      = link_to 'Destroy', task, confirm: 'Are you sure?', method: :delete
+      = link_to 'Destroy', project_tasklist_task_path(@project, @tasklist, task), confirm: 'Are you sure?', method: :delete
+%h1
+  Tasks to do
+- if @user.tasks_todo_in(@tasklist).empty? then
+  %p You are happy person. You don't have any tasks assigned for you to perform in current project.
+- else
+  - if @user.tasks_todo_in(@tasklist).where("tstate = ?", 'open').count != 0 then
+    %h2 Opened tasks
+    %ul
+    - @user.tasks_todo_in(@tasklist).where("tstate = ?", 'open').each do |t|
+      %li
+        = link_to t.tname, edit_project_tasklist_task_path(@project, @tasklist, t)
+  - if @user.tasks_todo_in(@tasklist).where("tstate = ?", 'processing').count != 0 then
+    %h2 Tasks in process
+    %ul
+    - @user.tasks_todo_in(@tasklist).where("tstate = ?", 'processing').each do |t|
+      %li
+        = link_to t.tname, edit_project_tasklist_task_path(@project, @tasklist, t)
+  - if @user.tasks_todo_in(@tasklist).where("tstate = ?", 'done').count != 0 then
+    %h2 Completed tasks
+    %ul
+    - @user.tasks_todo_in(@tasklist).where("tstate = ?", 'done').each do |t|
+      %li
+        = link_to t.tname, edit_project_tasklist_task_path(@project, @tasklist, t)
