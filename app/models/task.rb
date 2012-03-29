@@ -7,5 +7,7 @@ class Task < ActiveRecord::Base
   validates_inclusion_of :tstate, :in => Task::TASK_STATES
   validates_inclusion_of :tpriority, :in => Task::TASK_PRIORITIES
   validates :tasklist_id, :tname, :tdescription, :presence => true
+  scope :on_user, lambda {|user| {:conditions => {:user_id => user}}}
+  scope :status, lambda {|st| where("tstate = ?", st)}
 
 end

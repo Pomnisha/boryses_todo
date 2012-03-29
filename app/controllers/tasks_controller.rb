@@ -1,6 +1,7 @@
 class TasksController < ApplicationController
   before_filter :authenticate_user!
   before_filter :correct_user
+  before_filter :idetify_task, :only => [:edit, :update, :show, :destroy]
 
   # GET /tasks/1
   # GET /tasks/1.json
@@ -13,7 +14,6 @@ class TasksController < ApplicationController
     end
   end
 
-
   def show
     @task = Task.find(params[:id])
   end
@@ -22,7 +22,6 @@ class TasksController < ApplicationController
   # GET /tasks/new.json
   def new
     @task = Task.new
-    render action: "new"
   end
 
   # GET /tasks/1/edit
@@ -65,11 +64,21 @@ class TasksController < ApplicationController
     begin
       @project = Project.find(params[:project_id])
       @tasklist = Tasklist.find(params[:tasklist_id])
+      @user = current_user
+      redirect_to user_path(current_user), notice: 'You are not allowed to access this content.' and return unless @project.nil? or @project.collaborators.include?(current_user)
+      redirect_to user_path(current_user), notice: 'Wrong tasklist identifier.' and return unless @project.tasklists.include?(@tasklist)
     rescue
-      redirect_to user_path(current_user), notice: "Wrong identifier."
-    ensure
-      redirect_to user_path(current_user), notice: 'You are not allowed to access this content.' unless @project.nil? or @project.collaborators.include?(current_user)
+      redirect_to user_path(current_user), notice: "Wrong project or tasklist identifier." and return
     end
-
   end
+
+  def idetify_task
+    begin
+      @task = Task.find(params[:id])
+      redirect_to user_path(current_user), notice: 'Wrong task identifier.' and return unless @tasklist.tasks.include?(@task)
+    rescue
+      render action: "new" and return
+    end
+  end
+
 end

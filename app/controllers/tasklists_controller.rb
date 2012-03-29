@@ -1,28 +1,24 @@
 class TasklistsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :correct_user
-
+  before_filter :idetify_tasklist, :only => [:edit, :update, :show, :destroy]
   # GET /tasklists/1
   # GET /tasklists/1.json
   def index
-    render action: "index"
+    @tasklists = @project.tasklists
   end
   
   def show
-    @tasklist = Tasklist.find(params[:id])
-     render action: "show"
   end
 
   # GET /tasklists/new
   # GET /tasklists/new.json
   def new
     @tasklist = Tasklist.new()
-    render action: "new"
   end
 
   # GET /tasklists/1/edit
   def edit
-    @tasklist = Tasklist.find(params[:id])
   end
 
   # POST /tasklists
@@ -39,22 +35,18 @@ class TasklistsController < ApplicationController
   # PUT /tasklists/1
   # PUT /tasklists/1.json
   def update
-    @tasklist = Tasklist.find(params[:id])
-
     if @tasklist.update_attributes(params[:tasklist])
-      redirect_to @tasklist, notice: 'Tasklist was successfully updated.'
+      redirect_to project_tasklist_path(@project,@tasklist), notice: 'Tasklist was successfully updated.'
     else
       render action: "edit"
     end
-
   end
 
   # DELETE /tasklists/1
   # DELETE /tasklists/1.json
   def destroy
-    @tasklist = Tasklist.find(params[:id])
     @tasklist.destroy
-    redirect_to project_tasklists_path
+    redirect_to action: "index"
   end
   
   private
@@ -63,12 +55,20 @@ class TasklistsController < ApplicationController
     begin
       @project = Project.find(params[:project_id])
       @user = current_user
+      redirect_to user_path(current_user), notice: 'You are not allowed to access this content.' and return unless @project.nil? or @project.collaborators.include?(current_user)
     rescue
-      redirect_to user_path(current_user), notice: "Wrong project identifier."
-    ensure
-      redirect_to user_path(current_user), notice: 'You are not allowed to access this content.' unless @project.nil? or @project.collaborators.include?(current_user)
+      render template: "projects/new" and return
     end
 
+  end
+
+  def idetify_tasklist
+    begin
+      @tasklist = Tasklist.find(params[:id])
+      redirect_to user_path(current_user), notice: 'Wrong tasklist identifier.' and return unless @project.tasklists.include?(@tasklist)
+    rescue
+      render action: "new" and return
+    end
   end
 
 end
