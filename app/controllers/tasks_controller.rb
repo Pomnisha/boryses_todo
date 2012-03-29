@@ -15,7 +15,6 @@ class TasksController < ApplicationController
   end
 
   def show
-    @task = Task.find(params[:id])
   end
 
   # GET /tasks/new
@@ -26,7 +25,6 @@ class TasksController < ApplicationController
 
   # GET /tasks/1/edit
   def edit
-    @task = Task.find(params[:id])
   end
 
   # POST /tasks
@@ -43,7 +41,6 @@ class TasksController < ApplicationController
   # PUT /tasks/1
   # PUT /tasks/1.json
   def update
-    @task = Task.find(params[:id])
     if @task.update_attributes(params[:task])
       redirect_to project_tasklist_task_path(@project, @tasklist, @task), notice: 'Task was successfully updated.'
     else
@@ -54,11 +51,11 @@ class TasksController < ApplicationController
   # DELETE /tasks/1
   # DELETE /tasks/1.json
   def destroy
-    @task = Task.find(params[:id])
     @task.destroy
-
     redirect_to project_tasklist_path(@project, @tasklist)
   end
+
+  private
 
   def correct_user
     begin
