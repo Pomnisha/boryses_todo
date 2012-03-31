@@ -1,6 +1,6 @@
 %h1 List of tasklists
 %ul#tasklists_list
-  - @project.tasklists.each do |tasklist|
+  - @tasklists.each do |tasklist|
     %li
       %strong
         = link_to tasklist.tlname, project_tasklist_path(@project, tasklist)

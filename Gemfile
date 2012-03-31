@@ -28,6 +28,7 @@ group :test do
   gem 'factory_girl_rails'
   gem 'shoulda-matchers'
   gem 'capybara'
+  gem 'cucumber-rails'
 end
 
 gem 'jquery-rails'

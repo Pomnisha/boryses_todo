@@ -9,14 +9,13 @@ class ProjectsController < ApplicationController
   def index
     redirect_to user_path(current_user)
   end
+
   def show
-    @user = current_user
     @project = Project.find(params[:id])
   end
 
   def new
     @project = Project.new
-    render action: "new"
   end
 
   # GET /projects/1/edit
@@ -35,7 +34,6 @@ class ProjectsController < ApplicationController
     else
       render action: "new"
     end
-
   end
 
   # PUT /projects/1
@@ -63,10 +61,10 @@ class ProjectsController < ApplicationController
   def correct_user
     begin
       @project = Project.find(params[:id])
+      @user = current_user
+      redirect_to user_path(current_user), notice: 'You are not allowed to access this content.' and return unless @project.nil? or @project.collaborators.include?(current_user)
     rescue
-      redirect_to user_path(current_user), notice: "Wrong project identifier."
-    ensure
-      redirect_to user_path(current_user), notice: 'You are not allowed to access this content.' unless @project.nil? or @project.collaborators.include?(current_user)
+      render action: "new" and return
     end
   end
 end

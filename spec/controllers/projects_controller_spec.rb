@@ -22,6 +22,7 @@ describe ProjectsController do
     }
   end
 
+
   describe "GET new" do
     it "assigns a new project as @project" do
       get :new, {}
@@ -31,7 +32,6 @@ describe ProjectsController do
 
   describe "GET edit" do
     it "assigns the requested project as @project" do
-      sign_in @user
       project = Project.create! valid_attributes
       get :edit, {:id => project.to_param}
       assigns(:project).should eq(project)
@@ -53,9 +53,9 @@ describe ProjectsController do
         assigns(:project).should be_persisted
       end
 
-      it "redirects to the  user main view" do
+      it "redirects to the @project" do
         post :create, {:project => valid_attributes}
-        response.should redirect_to(@project)
+        response.should redirect_to(Project.last)
       end
     end
   end
@@ -63,7 +63,9 @@ describe ProjectsController do
     describe "with invalid params" do
       it "assigns a newly created but unsaved project as @project" do
         # Trigger the behavior that occurs when invalid params are submitted
+        #kind of going to new action with unsaved value of params
         Project.any_instance.stub(:save).and_return(false)
+        #Stubs any save activity with answer false
         post :create, {:project => {}}
         assigns(:project).should be_a_new(Project)
       end
@@ -95,7 +97,7 @@ describe ProjectsController do
         assigns(:project).should eq(project)
       end
 
-      it "redirects to the project's main view" do
+      it "redirects to the project's" do
         project = Project.create! valid_attributes
         put :update, {:id => project.to_param, :project => valid_attributes}
         response.should redirect_to(@project)
@@ -133,6 +135,68 @@ describe ProjectsController do
       project = Project.create! valid_attributes
       delete :destroy, {:id => project.to_param}
       response.should redirect_to(@user)
+    end
+  end
+
+  describe "GET index" do
+    it "redirects to main user page" do
+      get :index, {}
+      assigns(@user).should redirect_to(@user)
+    end
+  end
+
+
+  describe "controls access rights" do
+    before(:each) do
+      @project = Project.create! valid_attributes
+      @user1 = FactoryGirl.create(:user, :mname => "B")
+      sign_out(@user)
+      sign_in(@user1)
+    end
+
+    it "doesn't allow user to edit other users project" do
+      get :edit, {:id => @project.to_param}
+    end
+
+    it "doesn't allow user to update other users project" do
+      put :update, {:id => @project.to_param, :project => valid_attributes}
+    end
+
+    it "doesn't allow user to destroy other users project" do
+      delete :destroy, {:id => @project.to_param}
+    end
+
+    it "doesn't allow user to even show other users project" do
+      get :show, {:id => @project.to_param}
+    end
+
+    after(:each) do
+      response.should redirect_to(@user1)
+      flash[:notice].include?("You are not allowed to access this content.")
+    end
+
+  end
+
+  describe "accessing the project with wrong identifier" do
+    it "(edit) redirects user to project creation form" do
+      get :show, {:id => "100"}
+    end
+
+    it "(update) redirects user to project creation form" do
+      put :update, {:id => "100", :project => valid_attributes}
+    end
+
+    it "(destroy) redirects user to project creation form" do
+      delete :destroy, {:id => "100"}
+    end
+
+    it "(show) redirects user to project creation form" do
+      get :edit, {:id => "100"}
+    end
+
+    after(:each) do
+      response.should render_template("new")
+      #flash[:notice].include?("Wrong project identifier. You may create new if you want.") may be some time I'll understand how to easy redirect and hve flash
     end
   end
 

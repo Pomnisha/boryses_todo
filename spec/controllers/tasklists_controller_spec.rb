@@ -66,7 +66,7 @@ describe TasklistsController do
 
       it "redirects to the created tasklist" do
         post :create, {:project_id => @project.id, :tasklist => valid_attributes}
-        response.should redirect_to(project_tasklist_path(@project))
+        response.should redirect_to(project_tasklist_path(@project,Tasklist.last))
       end
     end
 
@@ -108,7 +108,7 @@ describe TasklistsController do
       it "redirects to the tasklist" do
         tasklist = Tasklist.create! valid_attributes
         put :update, {:project_id => @project.id, :id => tasklist.to_param, :tasklist => valid_attributes}
-        response.should redirect_to(project_tasklist_path(@project,tasklist))
+        response.should redirect_to(project_tasklist_url(@project, tasklist))
       end
     end
 
@@ -145,5 +145,119 @@ describe TasklistsController do
       response.should redirect_to(project_tasklists_url)
     end
   end
+
+  describe "controls access rights" do
+    before(:each) do
+      @tasklist = Tasklist.create! valid_attributes
+      @user1 = FactoryGirl.create(:user, :mname => "B")
+      sign_out(@user)
+      sign_in(@user1)
+    end
+
+    it "doesn't allow user to edit other users projects tasklists" do
+      get :edit, {:project_id => @project.id, :id => @tasklist.to_param}
+    end
+
+    it "doesn't allow user to update other users projects tasklists" do
+      put :update, {:project_id => @project.id, :id => @tasklist.to_param, :project => valid_attributes}
+    end
+
+    it "doesn't allow user to destroy other users projects tasklists" do
+      delete :destroy, {:project_id => @project.id, :id => @tasklist.to_param}
+    end
+
+    it "doesn't allow user to even show other users projects tasklists" do
+      get :show, {:project_id => @project.id, :id => @tasklist.to_param}
+    end
+
+    after(:each) do
+      response.should redirect_to(@user1)
+      flash[:notice].include?("You are not allowed to access this content.")
+    end
+
+  end
+
+  describe "accessing the project with wrong identifier" do
+    before(:each) do
+      @tasklist = Tasklist.create! valid_attributes
+    end
+
+    it "(edit) redirects user to project creation form" do
+      get :show, {:project_id => "100", :id => @tasklist.to_param}
+    end
+
+    it "(update) redirects user to project creation form" do
+      put :update, {:project_id => "100", :id => @tasklist.to_param, :tasklist => valid_attributes}
+    end
+
+    it "(destroy) redirects user to project creation form" do
+      delete :destroy, {:project_id => "100", :id => @tasklist.to_param}
+    end
+
+    it "(show) redirects user to project creation form" do
+      get :edit, {:project_id => "100", :id => @tasklist.to_param}
+    end
+
+    after(:each) do
+      response.should render_template("projects/new")
+    end
+
+  end
+
+
+  describe "accessing the tasklist with wrong identifier" do
+    it "(edit) redirects user to tasklist creation form" do
+      get :show, {:project_id => @project.id, :id => "100"}
+    end
+
+    it "(update) redirects user to tasklist creation form" do
+      put :update, {:project_id => @project.id, :id => "100", :tasklist => valid_attributes}
+    end
+
+    it "(destroy) redirects user to tasklist creation form" do
+      delete :destroy, {:project_id => @project.id, :id => "100"}
+    end
+
+    it "(show) redirects user to tasklist creation form" do
+      get :edit, {:project_id => @project.id, :id => "100"}
+    end
+
+    after(:each) do
+      response.should render_template("new")
+      #flash[:notice].include?("Wrong project identifier. You may create new if you want.") may be some time I'll understand how to easy redirect and hve flash
+    end
+  end
+
+  describe "accessing the project with wrong tasklist identifier" do
+    before(:each) do
+      @project2 =  FactoryGirl.create(:project, :owner => @user)
+      @tasklist1 = Tasklist.create! valid_attributes
+      @tasklist2 = Tasklist.create! valid_attributes.merge(:project_id => @project2.id)
+    end
+
+    it "(edit) redirects user to project creation form" do
+      get :show, {:project_id => @project.id, :id => @tasklist2.to_param}
+    end
+
+    it "(update) redirects user to project creation form" do
+      put :update, {:project_id => @project.id, :id => @tasklist2.to_param, :tasklist => valid_attributes}
+    end
+
+    it "(destroy) redirects user to project creation form" do
+      delete :destroy, {:project_id => @project.id, :id => @tasklist2.to_param}
+    end
+
+    it "(show) redirects user to project creation form" do
+      get :edit, {:project_id => @project.id, :id => @tasklist2.to_param}
+    end
+
+    after(:each) do
+      response.should redirect_to(user_path(@user))
+    end
+
+  end
+
+
+
 
 end
