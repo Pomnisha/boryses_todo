@@ -1,8 +1,8 @@
 BorysesTodo::Application.routes.draw do
 
-  devise_for :users, :path_prefix => 'dev', :path_names => { :sign_in => 'signin', :sign_up => 'signup' } do
-    get 'logout' => 'devise/sessions#destroy'
-  end
+  devise_for :users, :path_prefix => 'dev', :path_names => { :sign_in => 'signin', :sign_out => 'signout', :sign_up => 'signup' } #do
+    #get 'logout' => 'devise/sessions#destroy'
+  #end
   namespace :users do
     root :to => "#show"
   end
