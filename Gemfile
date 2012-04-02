@@ -29,6 +29,7 @@ group :test do
   gem 'shoulda-matchers'
   gem 'capybara'
   gem 'cucumber-rails'
+  gem 'cucumber'
 end
 
 gem 'jquery-rails'
